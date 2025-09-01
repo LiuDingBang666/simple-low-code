@@ -6,10 +6,12 @@
 
 <template>
   <el-row class="header">
-    <el-col class="header-column" :span="24">头部</el-col>
+    <el-col class="header-column" :span="24">{{ title }}</el-col>
   </el-row>
   <el-row class="content">
-    <el-col class="components" :span="6"></el-col>
+    <el-col class="components" :span="6">
+      <DrawComponent />
+    </el-col>
     <el-col class="content" :span="12"></el-col>
     <el-col class="setting" :span="6"></el-col>
   </el-row>
@@ -18,6 +20,9 @@
 <script setup lang="ts">
 import useSchemeStore from '@/store/useSchemeStore.ts'
 import { onMounted } from 'vue'
+import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
+
+const title = import.meta.env.VITE_APP_TITLE
 
 let scheme = useSchemeStore()
 onMounted(() => {
@@ -39,6 +44,9 @@ onMounted(() => {
 
 .content {
   height: 90vh;
+  .components {
+    overflow-x: hidden;
+  }
 }
 
 .el-col {
