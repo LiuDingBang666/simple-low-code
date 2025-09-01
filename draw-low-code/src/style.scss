@@ -13,3 +13,8 @@ $padding-base: 10px;
   --font-size-base: #{$font-size-base};
   --padding-base: #{$padding-base};
 }
+
+#app {
+  width: 100%;
+  height: 100vh;
+}
