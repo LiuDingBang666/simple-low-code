@@ -15,7 +15,16 @@
   </el-row>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import useSchemeStore from '@/store/useSchemeStore.ts'
+import { onMounted } from 'vue'
+
+let scheme = useSchemeStore()
+onMounted(() => {
+  console.log(scheme)
+  console.log(scheme.getScheme())
+})
+</script>
 
 <style scoped lang="scss">
 .header {

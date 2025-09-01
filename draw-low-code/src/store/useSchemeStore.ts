@@ -4,17 +4,38 @@
  * @author: liudingbang
  * @date: 2025/9/1 15:26
  */
-
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export default defineStore('scheme', () => {
-  return {
-    scheme: {},
-    setScheme(scheme: any) {
-      this.scheme = scheme
+export const useSchemeStore = defineStore(
+  'scheme',
+  () => {
+    // state
+    const scheme = ref({})
+
+    // actions
+    function setScheme(newScheme: any) {
+      scheme.value = newScheme
+    }
+
+    function getScheme() {
+      return scheme.value
+    }
+
+    function clearScheme() {
+      scheme.value = {}
+    }
+
+    // expose
+    return { scheme, setScheme, getScheme, clearScheme }
+  },
+  {
+    persist: {
+      key: 'scheme',
+      storage: localStorage,
+      pick: ['scheme'],
     },
-    getScheme() {
-      return this.scheme
-    },
-  }
-})
+  },
+)
+
+export default useSchemeStore
