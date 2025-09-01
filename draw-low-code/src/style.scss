@@ -1,0 +1,15 @@
+$primary-color: #42b983;
+$secondary-color: #35495e;
+$success-color: #28a745;
+$error-color: #dc3545;
+$font-size-base: 16px;
+$padding-base: 10px;
+
+:root {
+  --primary-color: #{$primary-color};
+  --secondary-color: #{$secondary-color};
+  --success-color: #{$success-color};
+  --error-color: #{$error-color};
+  --font-size-base: #{$font-size-base};
+  --padding-base: #{$padding-base};
+}
