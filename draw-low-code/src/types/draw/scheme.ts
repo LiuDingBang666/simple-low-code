@@ -13,7 +13,7 @@ interface DrawScheme {
   // 页面配置
   page: ComponentStyle & {
     // 页面节点
-    children: Array<ComponentItem & ComponentStyle>
+    children?: Array<ComponentItem>
     // 原生属性
     attrs?: HTMLAttributes
   }
@@ -30,7 +30,7 @@ interface ComponentGroup {
 }
 
 // 组件项
-interface ComponentItem {
+interface ComponentItem extends ComponentStyle {
   // 组件id
   id: string
   // 标题
@@ -59,7 +59,8 @@ interface ComponentItem {
   attrs?: HTMLAttributes
 
   // 组件子节点
-  children?: Array<ComponentItem & ComponentStyle>
+  children?: Array<ComponentItem>
+  // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象
 }
 
 // 组件样式

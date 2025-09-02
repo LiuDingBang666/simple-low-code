@@ -58,10 +58,12 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
     },
   ]
   let result = [...group, ...extra].sort((a, b) => a.sort - b.sort)
+  // todo 渲染的时候 也要用到这里的方法
   // 所有自定义或者扩展组件放置的地方
   const modules = import.meta.glob('@/components/*.vue')
   result.forEach((item) => {
     item.items.forEach(async (item) => {
+      // 异步组件加载
       if (item.componentPath) {
         // 加载异步组件
         item.is = defineAsyncComponent(modules[`/src/components/${item.componentPath}`] as any)

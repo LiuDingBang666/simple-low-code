@@ -12,7 +12,7 @@
     :style="pageStyle"
     v-bind="getScheme().value.page.attrs"
   >
-    <DrawRender />
+    <DrawRender :components="getScheme().value.page.children!" />
   </div>
 </template>
 

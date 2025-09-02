@@ -63,17 +63,19 @@ export const useSchemeStore = defineStore(
       const id = targetDom.getAttribute('data-id')
       if (id && id === 'top-node') {
         // 放在顶层，是否需要修改位置
-        scheme.value.page.children.push({
+        // 不需要修改位置，直接放置
+        scheme.value.page.children!.push({
           ...componentItem,
           id: uuidv4(),
         })
+        // todo 需要修改位置，找到目标元素，然后看放在左右还是上下
       } else {
-        // 不放在顶层，需要找到对应的上层
+        // todo 不放在顶层，需要找到对应的上层,放到上层下面
       }
     }
 
     // expose
-    return { scheme, setScheme, getScheme, clearScheme, addComponent }
+    return { scheme, getScheme, setScheme, clearScheme, addComponent }
   },
   {
     persist: {
