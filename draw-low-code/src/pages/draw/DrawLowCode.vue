@@ -12,23 +12,18 @@
     <el-col class="components" :span="6">
       <DrawComponent />
     </el-col>
-    <el-col data-can-drop="true" class="content" :span="12"></el-col>
+    <el-col class="content" :span="12">
+      <DrawRender />
+    </el-col>
     <el-col class="setting" :span="6"></el-col>
   </el-row>
 </template>
 
 <script setup lang="ts">
-import useSchemeStore from '@/store/useSchemeStore.ts'
-import { onMounted } from 'vue'
 import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
+import DrawRender from '@/pages/draw/render/DrawRender.vue'
 
 const title = import.meta.env.VITE_APP_TITLE
-
-let scheme = useSchemeStore()
-onMounted(() => {
-  console.log(scheme)
-  console.log(scheme.getScheme())
-})
 </script>
 
 <style scoped lang="scss">
@@ -36,6 +31,7 @@ onMounted(() => {
   height: 10vh;
 
   .header-column {
+    border-bottom-width: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -44,12 +40,24 @@ onMounted(() => {
 
 .content {
   height: 90vh;
+
   .components {
     overflow-x: hidden;
   }
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start;
 }
 
 .el-col {
   border: 0.5px solid rgba(128, 128, 128, 0.3);
+
+  .full-wh {
+    width: 100%;
+    height: 100%;
+  }
 }
 </style>

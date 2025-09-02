@@ -6,7 +6,7 @@
 
 <template>
   <el-collapse v-model="activeName" accordion>
-    <el-collapse-item title="一致性 Consistency" name="1">
+    <el-collapse-item title="基础元素" name="1">
       <div
         draggable="true"
         class="box"
@@ -147,9 +147,6 @@ function dragend(e: DragEvent) {
   if (targetDom && activeDom) {
     targetDom.classList.remove('drop-hover')
     const clone = activeDom.cloneNode(true) as HTMLElement
-    clone.style.position = 'absolute'
-    clone.style.left = `${e.clientX - activeDom.clientWidth}px`
-    clone.style.top = `${e.clientY - activeDom.clientHeight}px`
     targetDom.appendChild(clone)
   }
   targetDom = null

@@ -5,13 +5,18 @@
  * @date: 2025/9/1 15:26
  */
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
+import type { DrawScheme } from '@/types/draw/scheme.ts'
 
+const defaultScheme = {
+  version: '1.0.0',
+  page: {},
+}
 export const useSchemeStore = defineStore(
   'scheme',
   () => {
     // state
-    const scheme = ref({})
+    const scheme = ref<DrawScheme>(defaultScheme)
 
     // actions
     function setScheme(newScheme: any) {
@@ -19,11 +24,11 @@ export const useSchemeStore = defineStore(
     }
 
     function getScheme() {
-      return scheme.value
+      return computed(() => scheme.value)
     }
 
     function clearScheme() {
-      scheme.value = {}
+      scheme.value = defaultScheme
     }
 
     // expose
