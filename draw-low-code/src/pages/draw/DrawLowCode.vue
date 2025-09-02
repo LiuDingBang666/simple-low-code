@@ -43,6 +43,11 @@ const title = import.meta.env.VITE_APP_TITLE
 
   .components {
     overflow-x: hidden;
+    border-top-width: 0px;
+  }
+
+  .setting {
+    border-top-width: 0px;
   }
 
   display: flex;
@@ -59,5 +64,9 @@ const title = import.meta.env.VITE_APP_TITLE
     width: 100%;
     height: 100%;
   }
+}
+
+:deep(.drop-hover) {
+  border: 1px solid dodgerblue !important;
 }
 </style>

@@ -6,14 +6,18 @@
  */
 import { isReactive, isRef, onUnmounted, type Reactive, type Ref, watch } from 'vue'
 import { debounce, throttle } from '@/utils/limit-flow-utils.ts'
+import useSchemeStore from '@/store/useSchemeStore.ts'
+import type { ComponentItem } from '@/types/draw/scheme.ts'
 
 /**
  *  脱拽业务逻辑
- * @param dom dom
- * @param options 配置项
+ * @param dom dom 当前dom
+ * @param componentItem 当前选择的组件
+ * @param options 配置项 配置项
  */
 const useDrawHooks = (
   dom: Ref<HTMLElement> | Reactive<HTMLElement> | HTMLElement,
+  componentItem: Omit<ComponentItem, 'id'>,
   options?: {
     // 额外的事件处理
     extraEventCallBack: Record<string, any>
@@ -51,7 +55,6 @@ const useDrawHooks = (
     // console.log('拖拽中', e)
     const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
     if (target) {
-      // console.log(target)
       let attribute = target.getAttribute('data-can-drop')
       if (attribute && attribute === 'true' && target !== activeDom) {
         targetDom = target
@@ -170,11 +173,15 @@ const useDrawHooks = (
   function dragend(e: DragEvent) {
     // console.log('拖拽结束-dragend', e)
     // todo 动态生成协议，页面上根据协议来渲染对应的组件，点击组件后，找到当前协议对应的组件，通过修改配置来更新组件的信息。最后通过协议来生成页面代码
-    // 模拟克隆 DOM
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')
-      const clone = activeDom.cloneNode(true) as HTMLElement
-      targetDom.appendChild(clone)
+      const scheme = useSchemeStore()
+      scheme.addComponent({
+        e,
+        targetDom,
+        activeDom,
+        componentItem,
+      })
     }
     targetDom = null
     activeDom = null

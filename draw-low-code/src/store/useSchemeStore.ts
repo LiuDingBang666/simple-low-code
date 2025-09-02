@@ -6,7 +6,7 @@
  */
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
-import type { DrawScheme } from '@/types/draw/scheme.ts'
+import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
 
 const defaultScheme = {
   version: '1.0.0',
@@ -31,8 +31,27 @@ export const useSchemeStore = defineStore(
       scheme.value = defaultScheme
     }
 
+    /**
+     * 新增组件到协议中
+     * @param data e:事件 targetDom:承载的元素 activeDom:当前 componentItem:组件项
+     */
+    function addComponent(data: {
+      e: DragEvent
+      targetDom: HTMLElement
+      activeDom: HTMLElement
+      componentItem: Omit<ComponentItem, 'id'>
+    }) {
+      let { e, targetDom, activeDom, componentItem } = data
+      console.log('当前事件', e)
+      console.log('承载元素', targetDom)
+      console.log('当前脱拽元素', activeDom)
+      console.log('当前组件', componentItem)
+
+      // 如果是放在
+    }
+
     // expose
-    return { scheme, setScheme, getScheme, clearScheme }
+    return { scheme, setScheme, getScheme, clearScheme, addComponent }
   },
   {
     persist: {

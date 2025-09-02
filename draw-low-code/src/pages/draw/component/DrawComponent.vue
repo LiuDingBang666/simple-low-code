@@ -16,21 +16,24 @@
         <template v-for="(componentItem, componentIndex) in groupItem.items" :key="componentIndex">
           <el-image
             v-if="componentItem.icon"
+            data-can-drop="true"
+            draggable="true"
+            class="box"
             fit="cover"
             :src="componentItem.icon"
-            class="box"
-            :ref="refInit"
-            v-bind="{ ...componentItem, ...componentItem.props }"
+            :ref="(e: any) => refInit(e, componentItem)"
+            v-bind="{ ...componentItem.props }"
           ></el-image>
 
           <Component
             v-else
             data-can-drop="true"
             draggable="true"
-            :class="componentItem.isNative ? 'box' : ''"
+            id="drag-box"
+            :class="componentItem.isNative ? 'box' : undefined"
             :is="componentItem.is ?? componentItem.name"
-            :ref="refInit"
-            v-bind="{ ...componentItem, ...componentItem.props }"
+            :ref="(e: any) => refInit(e, componentItem)"
+            v-bind="{ ...componentItem.props }"
           >
             {{ componentItem.title }}
           </Component>
@@ -43,7 +46,7 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import initGroup from '@/pages/draw/component/component-group.ts'
-import type { ComponentGroup } from '@/types/draw/scheme.ts'
+import type { ComponentGroup, ComponentItem } from '@/types/draw/scheme.ts'
 import useDrawHooks from '@/hooks/useDrawHooks.ts'
 
 const activeName = ref('1')
@@ -55,15 +58,14 @@ onMounted(async () => {
   }
 })
 
-function refInit(value: any) {
+function refInit(value: any, componentItem: Omit<ComponentItem, 'id'>) {
   if (value instanceof HTMLElement) {
-    useDrawHooks(value)
+    useDrawHooks(value, componentItem)
   } else if (value instanceof Object) {
     if (value.$el) {
-      useDrawHooks(value.$el)
+      useDrawHooks(value.$el, componentItem)
     }
   }
-  // console.log(value)
 }
 </script>
 
@@ -77,10 +79,9 @@ function refInit(value: any) {
   background-color: dodgerblue;
   color: white;
   cursor: grab;
-}
-
-:global(.drop-hover) {
-  border: 1px solid dodgerblue !important;
+  display: inline-block;
+  text-align: center;
+  line-height: 50px;
 }
 
 .component-list {

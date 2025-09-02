@@ -5,15 +5,15 @@
 -->
 
 <template>
-  <div class="full-wh" data-can-drop="true"></div>
+  <div class="render-content" data-can-drop="true" data-id="top-node"></div>
 </template>
 
 <script setup lang="ts"></script>
 
 <style scoped lang="scss">
-.full-wh {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
+.render-content {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
 }
 </style>

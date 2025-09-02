@@ -18,3 +18,31 @@ $padding-base: 10px;
   width: 100%;
   height: 100vh;
 }
+
+
+/* ===== Chrome / Edge / Safari ===== */
+::-webkit-scrollbar {
+  width: 8px; /* 垂直滚动条宽度 */
+  height: 8px; /* 水平滚动条高度 */
+}
+
+::-webkit-scrollbar-track {
+  background: #f0f0f0; /* 轨道颜色 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #999; /* 滑块颜色 */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #666; /* 滑块 hover 颜色 */
+}
+
+/* ===== Firefox ===== */
+html {
+  scrollbar-width: thin; /* 细滚动条 */
+  scrollbar-color: #999 #f0f0f0; /* thumb颜色 轨道颜色 */
+  line-height: 0px;
+}
