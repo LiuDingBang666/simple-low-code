@@ -1,6 +1,6 @@
 # 项目名称
 
-比如：一个基于 Vue3 的轻量级拖拽式页面生成器。
+一个基于 Vue3 的轻量级拖拽式页面生成器。
 
 ![license](https://img.shields.io/github/license/xxx/xxx)
 ![version](https://img.shields.io/github/package-json/v/xxx/xxx)
