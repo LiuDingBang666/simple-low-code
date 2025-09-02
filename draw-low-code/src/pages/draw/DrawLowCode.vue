@@ -12,7 +12,7 @@
     <el-col class="components" :span="6">
       <DrawComponent />
     </el-col>
-    <el-col class="content" :span="12"></el-col>
+    <el-col data-can-drop="true" class="content" :span="12"></el-col>
     <el-col class="setting" :span="6"></el-col>
   </el-row>
 </template>
@@ -50,6 +50,6 @@ onMounted(() => {
 }
 
 .el-col {
-  border: 0.5px solid rgba(128, 128, 128, 0.8);
+  border: 0.5px solid rgba(128, 128, 128, 0.3);
 }
 </style>
