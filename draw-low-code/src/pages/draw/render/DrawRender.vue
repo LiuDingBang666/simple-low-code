@@ -8,14 +8,6 @@
   <div class="full-wh" data-can-drop="true"></div>
 </template>
 
-<script setup lang="ts">
-import useSchemeStore from '@/store/useSchemeStore.ts'
-import { onMounted, useId } from 'vue'
-
-let scheme = useSchemeStore()
-onMounted(() => {
-  console.log(useId())
-})
-</script>
+<script setup lang="ts"></script>
 
 <style scoped lang="scss"></style>

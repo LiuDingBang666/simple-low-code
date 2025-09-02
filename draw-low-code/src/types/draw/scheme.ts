@@ -1,6 +1,6 @@
 /**
  * @name: 名称
- * @description: TODO 协议定义
+ * @description: TODO 协议定义-最小MVP
  * @author: liudingbang
  * @date: 2025/9/2 09:37
  */
@@ -23,7 +23,7 @@ interface ComponentGroup {
   // 组名称
   name: string
   // 组件项
-  items: Array<ComponentItem>
+  items: Array<Omit<ComponentItem, 'id'>>
 }
 
 // 组件项
@@ -34,6 +34,8 @@ interface ComponentItem {
   name: string
   // 组件属性
   props?: Record<string, any>
+  // 是否是原生组件，比如div这种
+  isNative?: boolean
 }
 
 // 组件样式
