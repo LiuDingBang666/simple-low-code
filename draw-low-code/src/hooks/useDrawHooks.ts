@@ -169,6 +169,7 @@ const useDrawHooks = (
    */
   function dragend(e: DragEvent) {
     // console.log('拖拽结束-dragend', e)
+    // todo 动态生成协议，页面上根据协议来渲染对应的组件，点击组件后，找到当前协议对应的组件，通过修改配置来更新组件的信息。最后通过协议来生成页面代码
     // 模拟克隆 DOM
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')

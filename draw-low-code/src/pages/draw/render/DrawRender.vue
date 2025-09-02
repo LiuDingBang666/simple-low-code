@@ -10,4 +10,10 @@
 
 <script setup lang="ts"></script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.full-wh {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+}
+</style>

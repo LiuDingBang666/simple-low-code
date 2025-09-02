@@ -1,7 +1,7 @@
 # 项目名称
 
 一句话介绍项目做什么的（越简洁越好）。
-比如：一个基于 React 的轻量级拖拽式页面生成器。
+比如：一个基于 Vue3 的轻量级拖拽式页面生成器。
 
 ![license](https://img.shields.io/github/license/xxx/xxx)
 ![version](https://img.shields.io/github/package-json/v/xxx/xxx)
@@ -44,7 +44,9 @@ const page = createPage({
   title: "Hello",
   components: [{ type: "Button", props: { text: "点我" } }]
 });
+```js
 
+```markdown
 
 ---
 
@@ -58,6 +60,7 @@ yourproject/
 ├── tests/        # 测试
 └── README.md
 
+```markdown
 
 ## 🤝 开发指南
 
