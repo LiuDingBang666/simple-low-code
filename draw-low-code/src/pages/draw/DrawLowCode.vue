@@ -9,13 +9,13 @@
     <el-col class="header-column" :span="24">{{ title }}</el-col>
   </el-row>
   <el-row class="content">
-    <el-col class="components" :span="6">
+    <el-col class="components" :span="4">
       <DrawComponent />
     </el-col>
-    <el-col class="content" :span="12">
+    <el-col class="content" :span="16">
       <DrawRender />
     </el-col>
-    <el-col class="setting" :span="6"></el-col>
+    <el-col class="setting" :span="4"></el-col>
   </el-row>
 </template>
 
