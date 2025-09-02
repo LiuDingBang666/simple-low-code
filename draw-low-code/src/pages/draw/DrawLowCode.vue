@@ -13,7 +13,7 @@
       <DrawComponent />
     </el-col>
     <el-col class="content" :span="16">
-      <DrawRender />
+      <DrawContent />
     </el-col>
     <el-col class="setting" :span="4"></el-col>
   </el-row>
@@ -21,7 +21,7 @@
 
 <script setup lang="ts">
 import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
-import DrawRender from '@/pages/draw/render/DrawRender.vue'
+import DrawContent from '@/pages/draw/render/DrawContent.vue'
 
 const title = import.meta.env.VITE_APP_TITLE
 </script>

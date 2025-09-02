@@ -32,7 +32,7 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
     },
     {
       sort: 2,
-      name: '布局组件',
+      name: '开源UI库组件',
       items: [
         {
           name: 'ElButton',

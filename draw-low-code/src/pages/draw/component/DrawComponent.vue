@@ -16,24 +16,22 @@
         <template v-for="(componentItem, componentIndex) in groupItem.items" :key="componentIndex">
           <el-image
             v-if="componentItem.icon"
-            data-can-drop="true"
             draggable="true"
             class="box"
             fit="cover"
             :src="componentItem.icon"
             :ref="(e: any) => refInit(e, componentItem)"
-            v-bind="{ ...componentItem.props }"
+            v-bind="{ ...componentItem.props, ...componentItem.attrs }"
           ></el-image>
 
           <Component
             v-else
-            data-can-drop="true"
             draggable="true"
             id="drag-box"
             :class="componentItem.isNative ? 'box' : undefined"
             :is="componentItem.is ?? componentItem.name"
             :ref="(e: any) => refInit(e, componentItem)"
-            v-bind="{ ...componentItem.props }"
+            v-bind="{ ...componentItem.props, ...componentItem.attrs }"
           >
             {{ componentItem.title }}
           </Component>

@@ -4,7 +4,7 @@
  * @author: liudingbang
  * @date: 2025/9/2 09:37
  */
-import type { Component } from 'vue'
+import type { Component, HTMLAttributes } from 'vue'
 
 // 协议信息
 interface DrawScheme {
@@ -13,7 +13,9 @@ interface DrawScheme {
   // 页面配置
   page: ComponentStyle & {
     // 页面节点
-    children?: Array<ComponentItem & ComponentStyle>
+    children: Array<ComponentItem & ComponentStyle>
+    // 原生属性
+    attrs?: HTMLAttributes
   }
 }
 
@@ -51,24 +53,26 @@ interface ComponentItem {
   props?: Record<string, any>
 
   // 原生html属性特定配置
-
   // 是否是原生组件，比如div这种
   isNative?: boolean
   // 原生属性
-  attrs?: Record<string, any>
+  attrs?: HTMLAttributes
+
+  // 组件子节点
+  children?: Array<ComponentItem & ComponentStyle>
 }
 
 // 组件样式
 interface ComponentStyle {
   // 内联样式
-  style?: Record<string, any>
+  style?: Partial<CSSStyleDeclaration>
   // 类名对应的样式
   classStyle?: {
-    [key: string]: Record<string, any>
+    [key: string]: Record<string, Partial<CSSStyleDeclaration>>
   }
   // id对应的样式
   idStyle?: {
-    [key: string]: Record<string, any>
+    [key: string]: Record<string, Partial<CSSStyleDeclaration>>
   }
 }
 

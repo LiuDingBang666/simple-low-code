@@ -1,19 +1,22 @@
 <!--
-@description: TODO 画板渲染器
+@description: TODO 画布渲染器
 @author: liudingbang
-@date: 2025/9/2 09:19
+@date: 2025/9/2 17:32
 -->
 
 <template>
-  <div class="render-content" data-can-drop="true" data-id="top-node"></div>
+  <div>{{ getScheme().value }}</div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import useSchemeStore from '@/store/useSchemeStore.ts'
+import { onMounted } from 'vue'
 
-<style scoped lang="scss">
-.render-content {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-}
-</style>
+const { getScheme } = useSchemeStore()
+
+onMounted(() => {
+  console.log(getScheme().value)
+})
+</script>
+
+<style scoped lang="scss"></style>

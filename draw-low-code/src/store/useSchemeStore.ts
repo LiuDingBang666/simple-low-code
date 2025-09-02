@@ -5,12 +5,18 @@
  * @date: 2025/9/1 15:26
  */
 import { defineStore } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
+import { v4 as uuidv4 } from 'uuid'
 
-const defaultScheme = {
+const defaultScheme: DrawScheme = {
   version: '1.0.0',
-  page: {},
+  page: {
+    style: {
+      padding: '10px',
+    },
+    children: [],
+  },
 }
 export const useSchemeStore = defineStore(
   'scheme',
@@ -19,6 +25,11 @@ export const useSchemeStore = defineStore(
     const scheme = ref<DrawScheme>(defaultScheme)
 
     // actions
+    watch(scheme.value, () => {
+      console.log('协议已更新')
+      console.log(scheme.value)
+    })
+
     function setScheme(newScheme: any) {
       scheme.value = newScheme
     }
@@ -47,7 +58,18 @@ export const useSchemeStore = defineStore(
       console.log('当前脱拽元素', activeDom)
       console.log('当前组件', componentItem)
 
-      // 如果是放在
+      // todo 每一个组件，都可以决定是否可以支持嵌套，支持嵌套的话需要确定哪些组件可以嵌套进来
+      // 是否放在顶层
+      const id = targetDom.getAttribute('data-id')
+      if (id && id === 'top-node') {
+        // 放在顶层，是否需要修改位置
+        scheme.value.page.children.push({
+          ...componentItem,
+          id: uuidv4(),
+        })
+      } else {
+        // 不放在顶层，需要找到对应的上层
+      }
     }
 
     // expose
