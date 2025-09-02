@@ -15,28 +15,63 @@ import { debounce, throttle } from '@/utils/limit-flow-utils.ts'
 const useDrawHooks = (
   dom: Ref<HTMLElement> | Reactive<HTMLElement> | HTMLElement,
   options?: {
+    // 额外的事件处理
     extraEventCallBack: Record<string, any>
   },
 ) => {
-  // 初始化逻辑
-  let instanceDom: null | HTMLElement = null
-  watch(dom, () => {
-    if (dom) {
-      if (isRef(dom)) {
-        initEvent(dom.value)
-      } else if (isReactive(dom)) {
-        initEvent(dom)
-      } else if (dom instanceof HTMLElement) {
-        initEvent(dom)
+  /**
+   * 额外的事件处理
+   * @param name 事件名称
+   * @param e 事件对象
+   */
+  function handlerExtraEvent(name: string, e: DragEvent) {
+    if (
+      options &&
+      options.extraEventCallBack[name] &&
+      typeof options.extraEventCallBack[name] === 'function'
+    ) {
+      options.extraEventCallBack[name](e)
+    }
+  }
+
+  /**
+   * 在某个可放置元素上移动
+   * ⚠️ 必须 e.preventDefault() 否则 drop 不会触发
+   */
+  const dragover = debounce(function (e: DragEvent) {
+    e.preventDefault()
+    // console.log('在容器上方移动', e)
+    handlerExtraEvent('dragover', e)
+  }, 100)
+
+  /**
+   * 拖拽中（高频触发，不推荐做逻辑）
+   */
+  const drag = throttle(function (e: DragEvent) {
+    // console.log('拖拽中', e)
+    const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
+    if (target) {
+      // console.log(target)
+      let attribute = target.getAttribute('data-can-drop')
+      if (attribute && attribute === 'true' && target !== activeDom) {
+        targetDom = target
+        targetDom.classList.add('drop-hover')
+      } else {
+        targetDom?.classList.remove('drop-hover')
+        targetDom = null
       }
     }
-  })
+    handlerExtraEvent('drag', e)
+  }, 100)
 
   /**
    * 初始化事件
    * @param dom
    */
   function initEvent(dom: HTMLElement) {
+    if (dom.getAttribute('isInitDrag') === 'true') {
+      return
+    }
     dom.addEventListener('dragstart', dragstart)
     dom.addEventListener('dragenter', dragenter)
     dom.addEventListener('dragover', dragover)
@@ -44,8 +79,24 @@ const useDrawHooks = (
     dom.addEventListener('drag', drag)
     dom.addEventListener('drop', drop)
     dom.addEventListener('dragend', dragend)
+    dom.setAttribute('isInitDrag', 'true')
     instanceDom = dom
   }
+
+  // 初始化逻辑
+  let instanceDom: null | HTMLElement = null
+  if (dom instanceof HTMLElement) {
+    initEvent(dom)
+  }
+  watch(dom, () => {
+    if (dom) {
+      if (isRef(dom)) {
+        initEvent(dom.value)
+      } else if (isReactive(dom)) {
+        initEvent(dom)
+      }
+    }
+  })
 
   /**
    * 销毁事件
@@ -68,57 +119,22 @@ const useDrawHooks = (
   // 当前放置的元素
   let targetDom: HTMLElement | null = null
 
-  /**
-   * 额外的事件处理
-   * @param name 事件名称
-   * @param e 事件对象
-   */
-  function handlerExtraEvent(name: string, e: DragEvent) {
-    if (
-      options &&
-      options.extraEventCallBack[name] &&
-      typeof options.extraEventCallBack[name] === 'function'
-    ) {
-      options.extraEventCallBack[name](e)
-    }
-  }
-
   // 事件处理
   /**
    * 开始拖拽
    */
   function dragstart(e: DragEvent) {
-    console.log('开始拖拽', e)
+    // console.log('开始拖拽', e)
     activeDom = e.target as HTMLElement
     // e.dataTransfer?.setData('text/plain', 'custom-component') // 设置标识
     handlerExtraEvent('dragstart', e)
   }
 
   /**
-   * 拖拽中（高频触发，不推荐做逻辑）
-   */
-  const drag = throttle(function (e: DragEvent) {
-    console.log('拖拽中', e)
-    const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
-    if (target) {
-      console.log(target)
-      let attribute = target.getAttribute('data-can-drop')
-      if (attribute && attribute === 'true') {
-        targetDom = target
-        targetDom.classList.add('drop-hover')
-      } else {
-        targetDom?.classList.remove('drop-hover')
-        targetDom = null
-      }
-    }
-    handlerExtraEvent('drag', e)
-  }, 100)
-
-  /**
    * 进入某个可放置元素
    */
   function dragenter(e: DragEvent) {
-    console.log('进入某个可放置元素', e)
+    // console.log('进入某个可放置元素', e)
     // const target = e.currentTarget as HTMLElement
     // target.classList.add('drop-hover') // 高亮
     handlerExtraEvent('dragenter', e)
@@ -128,28 +144,18 @@ const useDrawHooks = (
    * 离开某个可放置元素
    */
   function dragleave(e: DragEvent) {
-    console.log('离开某个可放置元素', e)
+    // console.log('离开某个可放置元素', e)
     // const target = e.currentTarget as HTMLElement
     // target.classList.remove('drop-hover')
     handlerExtraEvent('dragleave', e)
   }
 
   /**
-   * 在某个可放置元素上移动
-   * ⚠️ 必须 e.preventDefault() 否则 drop 不会触发
-   */
-  const dragover = debounce(function (e: DragEvent) {
-    e.preventDefault()
-    console.log('在容器上方移动', e)
-    handlerExtraEvent('dragover', e)
-  }, 100)
-
-  /**
    * 放下（成功 drop）
    */
   function drop(e: DragEvent) {
     e.preventDefault()
-    console.log('成功放下', e)
+    // console.log('成功放下', e)
     // const type = e.dataTransfer?.getData('text/plain')
     // console.log('拖拽的类型:', type)
     //
@@ -162,7 +168,7 @@ const useDrawHooks = (
    * 拖拽结束（无论是否成功 drop）
    */
   function dragend(e: DragEvent) {
-    console.log('拖拽结束-dragend', e)
+    // console.log('拖拽结束-dragend', e)
     // 模拟克隆 DOM
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')

@@ -19,7 +19,7 @@
             fit="cover"
             :src="componentItem.icon"
             class="box"
-            :ref="'componentRef' + groupIndex + '-' + componentIndex"
+            :ref="refInit"
             v-bind="{ ...componentItem, ...componentItem.props }"
           ></el-image>
 
@@ -27,9 +27,9 @@
             v-else
             data-can-drop="true"
             draggable="true"
-            :ref="'componentRef' + groupIndex + '-' + componentIndex"
             :class="componentItem.isNative ? 'box' : ''"
             :is="componentItem.is ?? componentItem.name"
+            :ref="refInit"
             v-bind="{ ...componentItem, ...componentItem.props }"
           >
             {{ componentItem.title }}
@@ -41,9 +41,10 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance, nextTick, onMounted, reactive, ref } from 'vue'
+import { onMounted, reactive, ref } from 'vue'
 import initGroup from '@/pages/draw/component/component-group.ts'
 import type { ComponentGroup } from '@/types/draw/scheme.ts'
+import useDrawHooks from '@/hooks/useDrawHooks.ts'
 
 const activeName = ref('1')
 let group = reactive<Array<ComponentGroup>>([])
@@ -53,17 +54,17 @@ onMounted(async () => {
     activeName.value = group[0].name
   }
 })
-onMounted(() => {
-  const instance = getCurrentInstance()
-  if (instance) {
-    for (let refsKey in instance.refs) {
-      nextTick(() => {
-        const refs = instance.refs[refsKey]
-        console.log(refs)
-      })
+
+function refInit(value: any) {
+  if (value instanceof HTMLElement) {
+    useDrawHooks(value)
+  } else if (value instanceof Object) {
+    if (value.$el) {
+      useDrawHooks(value.$el)
     }
   }
-})
+  // console.log(value)
+}
 </script>
 
 <style scoped lang="scss">

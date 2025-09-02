@@ -4,7 +4,7 @@
 @date: 2025/9/2 11:35
 -->
 
-<template>我是测试组件，牛马牛马</template>
+<template><div>我是测试组件，牛马牛马</div></template>
 
 <script setup lang="ts"></script>
 

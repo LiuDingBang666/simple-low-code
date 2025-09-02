@@ -44,6 +44,18 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
         },
       ],
     },
+    {
+      sort: 2,
+      name: '自定义组件',
+      items: [
+        {
+          name: 'TestComponent',
+          componentPath: 'TestComponent.vue',
+          title: '自定义',
+          isNative: false,
+        },
+      ],
+    },
   ]
   let result = [...group, ...extra].sort((a, b) => a.sort - b.sort)
   // 所有自定义或者扩展组件放置的地方
