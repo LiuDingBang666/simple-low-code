@@ -1,4 +1,4 @@
-# 项目名称
+# simple-low-code
 
 一个基于 Vue3 的轻量级拖拽式页面生成器。
 
@@ -22,13 +22,16 @@ git clone https://github.com/yourname/yourproject.git
 
 # 安装依赖
 cd yourproject
-npm install
+pnpm install
 
 # 启动项目
-npm run dev
+pnpm run dev
 
 
 ---
+
+下方待补充，暂时使用模版....
+
 
 ## 5. 使用示例（Usage）
 ```markdown
