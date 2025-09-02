@@ -74,7 +74,7 @@ function refInit(value: any, componentItem: Omit<ComponentItem, 'id'>) {
   width: 50px;
   height: 50px;
   margin: 5px;
-  @include flex-center();
+  @include variables.flex-center();
   border-radius: 5px;
   background-color: dodgerblue;
   color: white;
