@@ -265,7 +265,6 @@ const useDrawHooks = (
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')
       const scheme = useSchemeStore()
-
       let allComponentDoms = [...document.querySelectorAll('#render-component')]
       let closestNode = getClosestNode(e, allComponentDoms)!
       let closestNodePosition: DragPosition = 'center'

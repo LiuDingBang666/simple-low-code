@@ -164,6 +164,8 @@ export const useSchemeStore = defineStore(
       if (id === 'top-node') {
         // 放在顶层
         // @ts-ignore
+        // 既然要放在顶层，那父节点肯定没有
+        componentItem.parent = undefined
         addComponent(scheme.value.page.children!, componentItem, closestNode, closestNodePosition)
       } else {
         // 找到目标节点，作为子节点放入
