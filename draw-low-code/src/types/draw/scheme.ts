@@ -32,7 +32,7 @@ interface ComponentGroup {
 // 组件项
 interface ComponentItem extends ComponentStyle {
   // 组件id
-  id: string
+  id?: string
   // 标题
   title: string
   // 组件名称

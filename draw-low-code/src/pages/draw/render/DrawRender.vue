@@ -12,7 +12,8 @@
     :data-id="item.id"
     draggable="true"
     :is="item.is ?? item.name"
-    :style="componentStyle(item)"
+    :style="parseStyles(item)"
+    :ref="(e: any) => refInitDrawHooks(e, item)"
     v-bind="{ ...item.attrs, ...item.props }"
   >
     <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />
@@ -21,6 +22,8 @@
 
 <script setup lang="ts">
 import type { ComponentItem } from '@/types/draw/scheme.ts'
+import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
+import { parseStyles } from '@/pages/draw/render/parse-styles.ts'
 
 let props = withDefaults(
   defineProps<{
@@ -31,35 +34,6 @@ let props = withDefaults(
     components: () => [],
   },
 )
-
-/**
- * 组装样式
- * @param component
- */
-function componentStyle(component: ComponentItem) {
-  let afterStyle: Partial<StyleSheet> = {}
-  if (component.classStyle) {
-    Object.keys(component.classStyle).map((key) => {
-      afterStyle = {
-        ...afterStyle,
-        ...component.classStyle![key],
-      }
-    })
-  }
-  if (component.idStyle) {
-    Object.keys(component.idStyle).map((key) => {
-      afterStyle = {
-        ...afterStyle,
-        ...component.idStyle![key],
-      }
-    })
-  }
-  afterStyle = {
-    ...afterStyle,
-    ...component.style,
-  }
-  return afterStyle
-}
 </script>
 
 <script lang="ts">

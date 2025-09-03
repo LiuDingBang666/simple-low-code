@@ -41,7 +41,7 @@ export const useSchemeStore = defineStore(
 
     function clearScheme() {
       scheme.value = { version: '1.0.0', page: { style: { padding: '10px' }, children: [] } }
-      ElMessage.success('清空成功')
+      ElMessage.success('重置成功')
     }
 
     /**
@@ -69,7 +69,7 @@ export const useSchemeStore = defineStore(
         scheme.value.page.children!.push({
           ...componentItem,
           id: uuidv4(),
-        })
+        } as any)
         // todo 需要修改位置，找到目标元素，然后看放在左右还是上下
       } else {
         // todo 不放在顶层，需要找到对应的上层,放到上层下面

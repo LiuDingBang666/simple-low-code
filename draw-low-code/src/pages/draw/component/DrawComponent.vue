@@ -20,7 +20,7 @@
             class="box"
             fit="cover"
             :src="componentItem.icon"
-            :ref="(e: any) => refInit(e, componentItem)"
+            :ref="(e: any) => refInitDrawHooks(e, componentItem)"
             v-bind="{ ...componentItem.props, ...componentItem.attrs }"
           ></el-image>
 
@@ -30,7 +30,7 @@
             id="drag-box"
             :class="componentItem.isNative ? 'box' : undefined"
             :is="componentItem.is ?? componentItem.name"
-            :ref="(e: any) => refInit(e, componentItem)"
+            :ref="(e: any) => refInitDrawHooks(e, componentItem)"
             v-bind="{ ...componentItem.props, ...componentItem.attrs }"
           >
             {{ componentItem.title }}
@@ -44,8 +44,8 @@
 <script setup lang="ts">
 import { onMounted, reactive, ref } from 'vue'
 import initGroup from '@/pages/draw/component/component-group.ts'
-import type { ComponentGroup, ComponentItem } from '@/types/draw/scheme.ts'
-import useDrawHooks from '@/hooks/useDrawHooks.ts'
+import type { ComponentGroup } from '@/types/draw/scheme.ts'
+import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
 
 const activeName = ref('1')
 let group = reactive<Array<ComponentGroup>>([])
@@ -55,16 +55,6 @@ onMounted(async () => {
     activeName.value = group[0].name
   }
 })
-
-function refInit(value: any, componentItem: Omit<ComponentItem, 'id'>) {
-  if (value instanceof HTMLElement) {
-    useDrawHooks(value, componentItem)
-  } else if (value instanceof Object) {
-    if (value.$el) {
-      useDrawHooks(value.$el, componentItem)
-    }
-  }
-}
 </script>
 
 <style scoped lang="scss">
