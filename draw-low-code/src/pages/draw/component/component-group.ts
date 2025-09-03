@@ -19,10 +19,12 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
           isCanNest: true,
           canNestElements: ['div'],
           style: {
-            width: '100px',
-            height: '100px',
+            minWidth: '100px',
+            minHeight: '100px',
+            padding: '10px',
             border: '1px solid black',
             display: 'inline-block',
+            margin: '10px',
           },
           isNative: true,
         },
@@ -73,7 +75,6 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
     },
   ]
   let result = [...group, ...extra].sort((a, b) => a.sort - b.sort)
-  // todo 渲染的时候 也要用到这里的方法
   // 所有自定义或者扩展组件放置的地方
   const modules = import.meta.glob('@/components/*.vue')
   result.forEach((item) => {

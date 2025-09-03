@@ -15,10 +15,12 @@
     :style="parseStyles(item)"
     :ref="(e: any) => refInitDrawHooks(e, item)"
     v-bind="{ ...item.attrs, ...item.props }"
-    @click="(e: Event) => handlerClick(e, item)"
+    @click.prevent.stop="(e: Event) => handlerClick(e, item)"
   >
-    {{ item.value }}
-    <template v-if="item.showTitle">
+    <template v-if="item.value">
+      {{ item.value }}
+    </template>
+    <template v-else-if="item.showTitle && item.title">
       {{ item.title }}
     </template>
     <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />
