@@ -8,6 +8,9 @@
   <component
     v-for="item in props.components"
     :key="item.id"
+    :data-can-drop="item.isCanNest"
+    :data-id="item.id"
+    draggable="true"
     :is="item.is ?? item.name"
     :style="componentStyle(item)"
     v-bind="{ ...item.attrs, ...item.props }"
@@ -55,6 +58,7 @@ function componentStyle(component: ComponentItem) {
     ...afterStyle,
     ...component.style,
   }
+  return afterStyle
 }
 </script>
 

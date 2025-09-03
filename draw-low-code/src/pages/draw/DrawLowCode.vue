@@ -6,7 +6,10 @@
 
 <template>
   <el-row class="header">
-    <el-col class="header-column" :span="24">{{ title }}</el-col>
+    <el-col class="header-column" :span="24"
+      >{{ title }}
+      <el-button style="margin-left: 10px" type="danger" @click="reset">重置</el-button>
+    </el-col>
   </el-row>
   <el-row class="content">
     <el-col class="components" :span="4">
@@ -22,8 +25,15 @@
 <script setup lang="ts">
 import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
 import DrawContent from '@/pages/draw/render/DrawContent.vue'
+import useSchemeStore from '@/store/useSchemeStore.ts'
 
 const title = import.meta.env.VITE_APP_TITLE
+
+let scheme = useSchemeStore()
+
+function reset() {
+  scheme.clearScheme()
+}
 </script>
 
 <style scoped lang="scss">

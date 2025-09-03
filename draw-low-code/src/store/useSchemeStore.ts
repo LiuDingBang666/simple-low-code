@@ -8,6 +8,7 @@ import { defineStore } from 'pinia'
 import { computed, ref, watch } from 'vue'
 import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
 import { v4 as uuidv4 } from 'uuid'
+import { ElMessage } from 'element-plus'
 
 const defaultScheme: DrawScheme = {
   version: '1.0.0',
@@ -39,7 +40,8 @@ export const useSchemeStore = defineStore(
     }
 
     function clearScheme() {
-      scheme.value = defaultScheme
+      scheme.value = { version: '1.0.0', page: { style: { padding: '10px' }, children: [] } }
+      ElMessage.success('清空成功')
     }
 
     /**

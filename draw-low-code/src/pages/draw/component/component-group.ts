@@ -16,6 +16,15 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
         {
           name: 'div',
           title: '盒子',
+          isCanNest: true,
+          canNestElements: ['div'],
+          style: {
+            width: '100px',
+            height: '100px',
+            border: '1px solid red',
+            backgroundColor: '#fff',
+            display: 'inlineBlock',
+          },
           isNative: true,
         },
         {

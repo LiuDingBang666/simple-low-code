@@ -60,6 +60,13 @@ interface ComponentItem extends ComponentStyle {
 
   // 组件子节点
   children?: Array<ComponentItem>
+
+  // 实例属性
+  // 是否可以嵌套
+  isCanNest?: boolean
+  // 可以嵌套的名称
+  canNestElements?: Array<string>
+
   // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象
 }
 
