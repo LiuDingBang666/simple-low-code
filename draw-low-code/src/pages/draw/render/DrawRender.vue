@@ -18,9 +18,7 @@
     id="render-component"
     @click.prevent.stop="(e: Event) => handlerClick(e, item)"
   >
-    <template v-if="item.value">
-      {{ item.value }}
-    </template>
+    <template v-if="item.value"> {{ item.value }}</template>
     <template v-else-if="item.showTitle && item.title">
       {{ item.title }}
     </template>

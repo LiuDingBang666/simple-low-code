@@ -198,6 +198,11 @@ const useDrawHooks = (
     handlerExtraEvent('drop', e)
   }
 
+  /**
+   * 获取拖拽位置
+   * @param e 脱拽事件
+   * @param targetElement 当前放置的节点
+   */
   function getDragPosition(e: DragEvent, targetElement: HTMLElement): DragPosition {
     const rect = targetElement.getBoundingClientRect()
     const x = e.clientX
@@ -219,6 +224,38 @@ const useDrawHooks = (
   }
 
   /**
+   * 获取最接近的元素
+   * @param e 脱拽事件
+   * @param candidates 候选元素
+   */
+  function getClosestNode(e: DragEvent, candidates: Array<Element>) {
+    const mouseX = e.clientX
+    const mouseY = e.clientY
+
+    let closest = null
+    let minDistance = Infinity
+
+    candidates.forEach((node) => {
+      const rect = node.getBoundingClientRect()
+      const centerX = rect.left + rect.width / 2
+      const centerY = rect.top + rect.height / 2
+
+      const dx = mouseX - centerX
+      const dy = mouseY - centerY
+      const distance = Math.sqrt(dx * dx + dy * dy)
+
+      if (distance < minDistance) {
+        minDistance = distance
+        closest = node
+      }
+    })
+    if (closest == null) {
+      console.error('没有找到最接近的元素')
+    }
+    return closest
+  }
+
+  /**
    * 拖拽结束（无论是否成功 drop）
    */
   function dragend(e: DragEvent) {
@@ -228,12 +265,23 @@ const useDrawHooks = (
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')
       const scheme = useSchemeStore()
+
+      let allComponentDoms = [...document.querySelectorAll('#render-component')]
+      let closestNode = getClosestNode(e, allComponentDoms)!
+      let closestNodePosition: DragPosition = 'center'
+      console.log('最近的节点')
+      console.log(closestNode)
+      if (closestNode) {
+        closestNodePosition = getDragPosition(e, closestNode)
+        console.log('最近的节点位置', closestNodePosition)
+      }
       scheme.updateComponent({
         e,
         targetDom,
         activeDom,
         componentItem,
-        position: getDragPosition(e, targetDom),
+        closestNode,
+        closestNodePosition,
       })
     }
     targetDom = null

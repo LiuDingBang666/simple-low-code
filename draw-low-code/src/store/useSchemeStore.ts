@@ -59,37 +59,52 @@ export const useSchemeStore = defineStore(
      * 新增组件
      * @param children 当前同级数组
      * @param componentItem 当前组件数据
-     * @param position 放置位置
+     * @param closestNodePosition 放置位置
+     * @param closestNode 临近节点
      */
     function addComponent(
       children: Array<ComponentItem>,
       componentItem: ComponentItem,
-      position: DragPosition,
+      closestNode: Element,
+      closestNodePosition: DragPosition,
     ) {
       // console.log(children)
       // console.log(componentItem)
       // console.log(position)
       let item: ComponentItem = {
         ...componentItem,
-        id: uuidv4(),
       } as any
-      if (children.length > 0) {
-        switch (position) {
-          case 'top':
-          case 'left':
-            // console.log('放到头部')
-            children.splice(0, 0, item)
-            break
-          case 'right':
-          case 'bottom':
-          case 'center':
-            // console.log('放到尾部')
-            children.push(item)
-            break
-        }
+      // 保留原来的id
+      if (!item.id) {
+        item.id = uuidv4()
+      }
+      let closestNodeId = closestNode.getAttribute('data-id')
+      let activeComponents: Array<ComponentItem> = []
+      if (closestNodeId == 'top-node') {
+        // 顶级就是第一级
+        activeComponents = children
       } else {
-        children.push(item)
-        // console.log('放到尾部')
+        // 非顶级就是父级的下一级,当上级没有时，说明是顶级节点，只有顶级节点没有父级
+        activeComponents = componentItem.parent?.children ?? children
+      }
+      // 找到对应的位置
+      let index = activeComponents.findIndex((item) => item.id === closestNodeId)
+      console.log('最近的位置:')
+      console.log(index)
+      switch (closestNodePosition) {
+        case 'top':
+        case 'left':
+          console.log('放到头部')
+          activeComponents.splice(Math.max(index, 0), 0, item)
+          break
+        case 'right':
+        case 'bottom':
+          console.log('放到尾部')
+          activeComponents.splice(index + 1, 0, item)
+          break
+        case 'center':
+          console.log('放到中间')
+          activeComponents.splice(Math.ceil(activeComponents.length / 2), 0, item)
       }
     }
 
@@ -125,14 +140,16 @@ export const useSchemeStore = defineStore(
       targetDom: HTMLElement
       activeDom: HTMLElement
       componentItem: ComponentItem
-      position: DragPosition
+      closestNode: Element
+      closestNodePosition: DragPosition
     }) {
-      let { e, targetDom, activeDom, componentItem, position } = data
+      let { e, targetDom, activeDom, componentItem, closestNode, closestNodePosition } = data
       console.log('当前事件', e)
       console.log('承载元素', targetDom)
       console.log('当前脱拽元素', activeDom)
       console.log('当前组件', componentItem)
-      console.log('当前位置', position)
+      console.log('当前临近节点', closestNode)
+      console.log('当前位置', closestNodePosition)
 
       // 修改,先删除当前节点，再放入到指定节点中
       if (componentItem.id) {
@@ -147,7 +164,7 @@ export const useSchemeStore = defineStore(
       if (id === 'top-node') {
         // 放在顶层
         // @ts-ignore
-        addComponent(scheme.value.page.children!, componentItem, position)
+        addComponent(scheme.value.page.children!, componentItem, closestNode, closestNodePosition)
       } else {
         // 找到目标节点，作为子节点放入
         const targetComponentItem = findComponentItemById(id)
@@ -155,7 +172,13 @@ export const useSchemeStore = defineStore(
           if (!targetComponentItem?.children) {
             targetComponentItem.children = []
           }
-          addComponent(targetComponentItem.children, componentItem, position)
+          componentItem.parent = targetComponentItem
+          addComponent(
+            targetComponentItem.children,
+            componentItem,
+            closestNode,
+            closestNodePosition,
+          )
         }
       }
     }

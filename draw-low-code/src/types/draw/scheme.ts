@@ -33,19 +33,23 @@ interface ComponentGroup {
 
 // 组件项
 interface ComponentItem extends ComponentStyle {
-  // 组件id
-  id?: string
+  // 基础属性
   // 标题
   title: string
+  // 是否显示标题值，只有是原生组件才会生效
+  showTitle?: boolean
   // 组件名称
   name: string
-  // 默认值
-  value?: any
   // 默认样式类名，所有的默认样式走class，不走其他的
   class?: string
   // 组件图标
   icon?: string
-  // 每一个组件都有对应的设计器
+  // 是否可以嵌套
+  isCanNest?: boolean
+  // 可以嵌套的名称
+  canNestElements?: Array<string>
+
+  // todo 每一个组件都有对应的设计器
   settings?: Array<any>
 
   // 组件特定配置
@@ -59,19 +63,19 @@ interface ComponentItem extends ComponentStyle {
   // 原生html属性特定配置
   // 是否是原生组件，比如div这种
   isNative?: boolean
-  // 是否显示标题值，只有是原生组件才会生效
-  showTitle?: boolean
   // 原生属性
   attrs?: HTMLAttributes
 
+  // 实例属性
+
+  // 默认值
+  value?: any
+  // 组件id
+  id?: string
   // 组件子节点
   children?: Array<ComponentItem>
-
-  // 实例属性
-  // 是否可以嵌套
-  isCanNest?: boolean
-  // 可以嵌套的名称
-  canNestElements?: Array<string>
+  // 父节点
+  parent?: ComponentItem
 
   // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象
 }
