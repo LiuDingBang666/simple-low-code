@@ -198,6 +198,26 @@ const useDrawHooks = (
     handlerExtraEvent('drop', e)
   }
 
+  function getDragPosition(e: DragEvent, targetElement: HTMLElement): DragPosition {
+    const rect = targetElement.getBoundingClientRect()
+    const x = e.clientX
+    const y = e.clientY
+
+    // 鼠标相对元素左上角的 X
+    const offsetX = x - rect.left
+    // 鼠标相对元素左上角的 Y
+    const offsetY = y - rect.top
+
+    const thirdWidth = rect.width / 3
+    const thirdHeight = rect.height / 3
+
+    if (offsetY < thirdHeight) return 'top'
+    if (offsetY > rect.height - thirdHeight) return 'bottom'
+    if (offsetX < thirdWidth) return 'left'
+    if (offsetX > rect.width - thirdWidth) return 'right'
+    return 'center'
+  }
+
   /**
    * 拖拽结束（无论是否成功 drop）
    */
@@ -213,6 +233,7 @@ const useDrawHooks = (
         targetDom,
         activeDom,
         componentItem,
+        position: getDragPosition(e, targetDom),
       })
     }
     targetDom = null
@@ -241,3 +262,5 @@ export function refInitDrawHooks(value: any, componentItem: ComponentItem) {
     }
   }
 }
+
+export type DragPosition = 'top' | 'bottom' | 'left' | 'right' | 'center'

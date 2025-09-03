@@ -9,6 +9,7 @@ import { computed, ref, watch } from 'vue'
 import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
+import type { DragPosition } from '@/hooks/useDrawHooks.ts'
 
 const defaultScheme: DrawScheme = {
   version: '1.0.0',
@@ -58,19 +59,45 @@ export const useSchemeStore = defineStore(
      * 新增组件
      * @param children 当前同级数组
      * @param componentItem 当前组件数据
+     * @param position 放置位置
      */
-    function addComponent(children: Array<ComponentItem>, componentItem: ComponentItem) {
-      children.push({
+    function addComponent(
+      children: Array<ComponentItem>,
+      componentItem: ComponentItem,
+      position: DragPosition,
+    ) {
+      // console.log(children)
+      // console.log(componentItem)
+      // console.log(position)
+      let item: ComponentItem = {
         ...componentItem,
         id: uuidv4(),
-      } as any)
+      } as any
+      if (children.length > 0) {
+        switch (position) {
+          case 'top':
+          case 'left':
+            // console.log('放到头部')
+            children.splice(0, 0, item)
+            break
+          case 'right':
+          case 'bottom':
+          case 'center':
+            // console.log('放到尾部')
+            children.push(item)
+            break
+        }
+      } else {
+        children.push(item)
+        // console.log('放到尾部')
+      }
     }
 
     /**
      * 通过，删除组件树中的某一项
      * @param id 组件项id
      */
-    function deleteComponentItemById(id: string) {
+    function deleteComponentById(id: string) {
       let children = scheme.value.page.children!
 
       function deleteComponentById(children: Array<ComponentItem>) {
@@ -98,16 +125,18 @@ export const useSchemeStore = defineStore(
       targetDom: HTMLElement
       activeDom: HTMLElement
       componentItem: ComponentItem
+      position: DragPosition
     }) {
-      let { e, targetDom, activeDom, componentItem } = data
+      let { e, targetDom, activeDom, componentItem, position } = data
       console.log('当前事件', e)
       console.log('承载元素', targetDom)
       console.log('当前脱拽元素', activeDom)
       console.log('当前组件', componentItem)
+      console.log('当前位置', position)
 
       // 修改,先删除当前节点，再放入到指定节点中
       if (componentItem.id) {
-        deleteComponentItemById(componentItem.id)
+        deleteComponentById(componentItem.id)
       }
       // 有data-id的元素才是合法的承载对象
       const id = targetDom.getAttribute('data-id')
@@ -116,11 +145,9 @@ export const useSchemeStore = defineStore(
       }
       // 是否放在顶层
       if (id === 'top-node') {
-        // 放在顶层，不需要修改位置，直接放置
+        // 放在顶层
         // @ts-ignore
-        addComponent(scheme.value.page.children!, componentItem)
-        console.log('直接放在顶层最后面')
-        // todo 需要修改位置，找到目标元素，然后看放在左右还是上下
+        addComponent(scheme.value.page.children!, componentItem, position)
       } else {
         // 找到目标节点，作为子节点放入
         const targetComponentItem = findComponentItemById(id)
@@ -128,8 +155,7 @@ export const useSchemeStore = defineStore(
           if (!targetComponentItem?.children) {
             targetComponentItem.children = []
           }
-          addComponent(targetComponentItem.children, componentItem)
-          // todo 不放在顶层，需要找到对应的上层,然后看放在左右还是上下
+          addComponent(targetComponentItem.children, componentItem, position)
         }
       }
     }
