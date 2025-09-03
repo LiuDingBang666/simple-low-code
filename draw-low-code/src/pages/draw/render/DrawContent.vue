@@ -5,7 +5,13 @@
 -->
 
 <template>
-  <div class="render-content" data-can-drop="true" data-id="top-node" :style="pageStyle">
+  <div
+    class="render-content"
+    data-can-drop="true"
+    id="render-component"
+    data-id="top-node"
+    :style="pageStyle"
+  >
     <DrawRender :components="getScheme().value.page.children!" />
   </div>
 </template>
