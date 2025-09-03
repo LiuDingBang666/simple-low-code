@@ -9,6 +9,8 @@
     <el-col class="header-column" :span="24"
       >{{ title }}
       <el-button style="margin-left: 10px" type="danger" @click="reset">重置</el-button>
+      <el-button style="margin-left: 10px" type="warning" @click="developing">预览</el-button>
+      <el-button style="margin-left: 10px" type="success" @click="developing">出码</el-button>
     </el-col>
   </el-row>
   <el-row class="content">
@@ -26,6 +28,7 @@
 import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
 import DrawContent from '@/pages/draw/render/DrawContent.vue'
 import useSchemeStore from '@/store/useSchemeStore.ts'
+import { developing } from '@/utils/tip.ts'
 
 const title = import.meta.env.VITE_APP_TITLE
 
@@ -76,7 +79,7 @@ function reset() {
   }
 }
 
-:deep(.drop-hover) {
+:global(.drop-hover) {
   border: 1px solid dodgerblue !important;
 }
 </style>

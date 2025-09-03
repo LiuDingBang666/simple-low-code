@@ -15,7 +15,12 @@
     :style="parseStyles(item)"
     :ref="(e: any) => refInitDrawHooks(e, item)"
     v-bind="{ ...item.attrs, ...item.props }"
+    @click="(e: Event) => handlerClick(e, item)"
   >
+    {{ item.value }}
+    <template v-if="item.showTitle">
+      {{ item.title }}
+    </template>
     <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />
   </component>
 </template>
@@ -34,6 +39,11 @@ let props = withDefaults(
     components: () => [],
   },
 )
+
+function handlerClick(e: Event, item: ComponentItem) {
+  console.log(e.target)
+  console.log(e, item)
+}
 </script>
 
 <script lang="ts">

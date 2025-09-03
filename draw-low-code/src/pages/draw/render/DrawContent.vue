@@ -5,13 +5,7 @@
 -->
 
 <template>
-  <div
-    class="render-content"
-    data-can-drop="true"
-    data-id="top-node"
-    :style="pageStyle"
-    v-bind="getScheme().value.page.attrs"
-  >
+  <div class="render-content" data-can-drop="true" data-id="top-node" :style="pageStyle">
     <DrawRender :components="getScheme().value.page.children!" />
   </div>
 </template>

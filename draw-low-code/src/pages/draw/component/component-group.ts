@@ -21,9 +21,8 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
           style: {
             width: '100px',
             height: '100px',
-            border: '1px solid red',
-            backgroundColor: '#fff',
-            display: 'inlineBlock',
+            border: '1px solid black',
+            display: 'inline-block',
           },
           isNative: true,
         },
@@ -31,11 +30,17 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
           name: 'p',
           title: '段落',
           isNative: true,
+          showTitle: true,
         },
         {
           name: 'span',
           title: '文本',
+          style: {
+            display: 'block',
+            lineHeight: '20px',
+          },
           isNative: true,
+          showTitle: true,
         },
       ],
     },
@@ -47,6 +52,7 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
           name: 'ElButton',
           title: '按钮',
           isNative: false,
+          showTitle: true,
           props: {
             type: 'primary',
           },

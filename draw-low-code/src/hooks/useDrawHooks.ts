@@ -46,6 +46,7 @@ const useDrawHooks = (
    */
   const dragover = debounce(function (e: DragEvent) {
     e.preventDefault()
+    e.stopPropagation()
     console.log('在容器上方移动', e)
     handlerExtraEvent('dragover', e)
   }, 100)
@@ -54,10 +55,26 @@ const useDrawHooks = (
    * 拖拽中（高频触发，不推荐做逻辑）
    */
   const drag = throttle(function (e: DragEvent) {
+    e.stopPropagation()
     console.log('拖拽中', e)
     const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
     if (target) {
       let attribute = target.getAttribute('data-can-drop')
+      // 判断当前这个目标节点是不是支持嵌套并且是可以嵌套的节点
+      let dataId = target.getAttribute('data-id')
+      if (dataId && dataId !== 'top-node') {
+        // 找到这个id对应的对接
+        const scheme = useSchemeStore()
+        let item = scheme.findComponentItemById(dataId)
+        if (
+          item &&
+          (!item.isCanNest ||
+            !item.canNestElements ||
+            !item.canNestElements.includes(componentItem.name))
+        ) {
+          return
+        }
+      }
       if (attribute && attribute === 'true' && target !== activeDom) {
         targetDom = target
         targetDom.classList.add('drop-hover')
@@ -138,6 +155,7 @@ const useDrawHooks = (
    */
   function dragstart(e: DragEvent) {
     console.log('开始拖拽', e)
+    e.stopPropagation()
     activeDom = e.target as HTMLElement
     // e.dataTransfer?.setData('text/plain', 'custom-component') // 设置标识
     handlerExtraEvent('dragstart', e)
@@ -148,6 +166,7 @@ const useDrawHooks = (
    */
   function dragenter(e: DragEvent) {
     console.log('进入某个可放置元素', e)
+    e.stopPropagation()
     // const target = e.currentTarget as HTMLElement
     // target.classList.add('drop-hover') // 高亮
     handlerExtraEvent('dragenter', e)
@@ -158,6 +177,7 @@ const useDrawHooks = (
    */
   function dragleave(e: DragEvent) {
     console.log('离开某个可放置元素', e)
+    e.stopPropagation()
     const target = e.currentTarget as HTMLElement
     target.classList.remove('drop-hover')
     handlerExtraEvent('dragleave', e)
@@ -168,6 +188,7 @@ const useDrawHooks = (
    */
   function drop(e: DragEvent) {
     e.preventDefault()
+    e.stopPropagation()
     console.log('成功放下', e)
     // const type = e.dataTransfer?.getData('text/plain')
     // console.log('拖拽的类型:', type)
@@ -182,15 +203,12 @@ const useDrawHooks = (
    */
   function dragend(e: DragEvent) {
     console.log('拖拽结束-dragend', e)
-    // 修改先不新增
-    if (componentItem.id) {
-      return
-    }
+    e.stopPropagation()
     // todo 动态生成协议，页面上根据协议来渲染对应的组件，点击组件后，找到当前协议对应的组件，通过修改配置来更新组件的信息。最后通过协议来生成页面代码
     if (targetDom && activeDom) {
       targetDom.classList.remove('drop-hover')
       const scheme = useSchemeStore()
-      scheme.addComponent({
+      scheme.updateComponent({
         e,
         targetDom,
         activeDom,

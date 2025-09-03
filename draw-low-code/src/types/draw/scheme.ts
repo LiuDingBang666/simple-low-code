@@ -11,12 +11,14 @@ interface DrawScheme {
   // 版本
   version: string
   // 页面配置
-  page: ComponentStyle & {
-    // 页面节点
-    children?: Array<ComponentItem>
-    // 原生属性
-    attrs?: HTMLAttributes
-  }
+  page: PageConfig
+}
+
+interface PageConfig extends ComponentStyle {
+  // 页面节点
+  children?: Array<ComponentItem>
+  // 原生属性
+  attrs?: Partial<HTMLAttributes>
 }
 
 // 组件组
@@ -37,6 +39,8 @@ interface ComponentItem extends ComponentStyle {
   title: string
   // 组件名称
   name: string
+  // 默认值
+  value?: any
   // 默认样式类名，所有的默认样式走class，不走其他的
   class?: string
   // 组件图标
@@ -55,6 +59,8 @@ interface ComponentItem extends ComponentStyle {
   // 原生html属性特定配置
   // 是否是原生组件，比如div这种
   isNative?: boolean
+  // 是否显示标题值，只有是原生组件才会生效
+  showTitle?: boolean
   // 原生属性
   attrs?: HTMLAttributes
 
