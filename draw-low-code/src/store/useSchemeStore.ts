@@ -100,7 +100,7 @@ export const useSchemeStore = defineStore(
         case 'right':
         case 'bottom':
           console.log('放到尾部')
-          activeComponents.splice(index + 1, 0, item)
+          activeComponents.splice(index != -1 ? index + 1 : children.length, 0, item)
           break
         case 'center':
           console.log('放到中间')
