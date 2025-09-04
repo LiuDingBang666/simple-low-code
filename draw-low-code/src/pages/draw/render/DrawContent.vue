@@ -11,7 +11,7 @@
     id="render-component"
     data-id="top-node"
     :style="pageStyle"
-    @click.prevent.stop="(e: Event) => handlerClick(e)"
+    @click.stop="(e: Event) => handlerClick(e)"
   >
     <DrawRender :components="getScheme().value.page.children!" />
   </div>

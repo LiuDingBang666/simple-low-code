@@ -9,13 +9,9 @@
     <el-row class="header">
       <el-col class="header-column" :span="24"
         >{{ title }}
-        <el-button style="margin-left: 10px" type="danger" @click.stop.prevent="reset"
-          >重置</el-button
-        >
-        <el-button style="margin-left: 10px" type="warning" @click.stop.prevent="preview"
-          >预览</el-button
-        >
-        <el-button style="margin-left: 10px" type="success" @click.stop.prevent="developing"
+        <el-button style="margin-left: 10px" type="danger" @click.stop="reset">重置</el-button>
+        <el-button style="margin-left: 10px" type="warning" @click.stop="preview">预览</el-button>
+        <el-button style="margin-left: 10px" type="success" @click.stop="developing"
           >出码</el-button
         >
       </el-col>
