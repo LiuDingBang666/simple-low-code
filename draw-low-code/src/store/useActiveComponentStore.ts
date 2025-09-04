@@ -5,7 +5,7 @@
  * @date: 2025/9/1 15:26
  */
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { computed, type Ref, ref } from 'vue'
 import type { ComponentItem, PageConfig } from '@/types/draw/scheme.ts'
 import useSchemeStore from '@/store/useSchemeStore.ts'
 
@@ -16,7 +16,8 @@ export const useActiveComponentStore = defineStore(
   'active-component',
   () => {
     // state
-    const activeComponent = ref<ActiveComponent>(null)
+    // @ts-ignore
+    const activeComponent: Ref<ActiveComponent> = ref<ActiveComponent>(null)
 
     // actions
     function setActiveComponent(event: Event, newActiveComponent: ActiveComponent) {
@@ -38,8 +39,15 @@ export const useActiveComponentStore = defineStore(
       activeComponent.value = useSchemeStore().getScheme().value.page
     }
 
+    /**
+     * 获取当前活跃组件
+     */
+    function getActiveComponent() {
+      return computed(() => activeComponent.value)
+    }
+
     // expose
-    return { activeComponent, setActiveComponent, clearActiveComponent }
+    return { activeComponent, setActiveComponent, clearActiveComponent, getActiveComponent }
   },
   {
     persist: {

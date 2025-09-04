@@ -9,14 +9,7 @@
   <div class="collapse">
     <el-collapse v-model="activeNames" @change="handleChange">
       <el-collapse-item title="通用" name="1">
-        <div>
-          Consistent with real life: in line with the process and logic of real life, and comply
-          with languages and habits that the users are used to;
-        </div>
-        <div>
-          Consistent within interface: all elements should be consistent, such as: design style,
-          icons and texts, position of elements, etc.
-        </div>
+        <CodeEditor v-model:value="value" />
       </el-collapse-item>
     </el-collapse>
   </div>
@@ -24,9 +17,14 @@
 
 <script setup lang="ts">
 import type { CollapseModelValue } from 'element-plus'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import CodeEditor from '@/components/CodeEditor.vue'
+import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 
+let { activeComponent } = useActiveComponentStore()
+watch(activeComponent, () => {})
 const activeNames = ref(['1'])
+let value = ref('')
 const handleChange = (val: CollapseModelValue) => {
   console.log(val)
 }
