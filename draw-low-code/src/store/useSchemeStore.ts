@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
 import type { DragPosition } from '@/hooks/useDrawHooks.ts'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
+import { getInheritSettingGroup, getInheritSettings } from '@/pages/draw/setting/setting-config.ts'
 
 const defaultScheme: DrawScheme = {
   version: '1.0.0',
@@ -20,6 +21,8 @@ const defaultScheme: DrawScheme = {
       padding: '10px',
     },
     children: [],
+    settings: getInheritSettings(),
+    groups: getInheritSettingGroup(),
   },
 }
 export const useSchemeStore = defineStore(
@@ -84,6 +87,10 @@ export const useSchemeStore = defineStore(
       if (!item.id) {
         isAdd = true
         item.id = 'uuid-' + uuidv4()
+        // 给所有设计器注入当前实例组件id
+        item.settings?.forEach((setting) => {
+          setting.componentInstanceId = item.id
+        })
       }
       let closestNodeId = closestNode.getAttribute('data-id')
       let activeComponents: Array<ComponentItem> = []
@@ -225,8 +232,28 @@ export const useSchemeStore = defineStore(
       return list.find((item) => item.id === id)
     }
 
+    /**
+     * 通过id更新组件项
+     * @param id 组件项id
+     * @param newComponentItem 新的组件项
+     */
+    function updateComponentById(id: string, newComponentItem: ComponentItem) {
+      let componentItem = findComponentItemById(id)
+      if (componentItem) {
+        Object.assign(componentItem, newComponentItem)
+      }
+    }
+
     // expose
-    return { scheme, getScheme, setScheme, clearScheme, updateComponent, findComponentItemById }
+    return {
+      scheme,
+      getScheme,
+      setScheme,
+      clearScheme,
+      updateComponent,
+      findComponentItemById,
+      updateComponentById,
+    }
   },
   {
     persist: {

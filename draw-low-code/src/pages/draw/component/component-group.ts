@@ -7,7 +7,7 @@
 import type { ComponentGroup } from '@/types/draw/scheme'
 import { defineAsyncComponent } from 'vue'
 
-export default function initGroup(extra: ComponentGroup[] = []): Array<ComponentGroup> {
+export default function initGroup(extraComponent: ComponentGroup[] = []): Array<ComponentGroup> {
   let group: Array<ComponentGroup> = [
     {
       sort: 1,
@@ -74,15 +74,17 @@ export default function initGroup(extra: ComponentGroup[] = []): Array<Component
       ],
     },
   ]
-  let result = [...group, ...extra].sort((a, b) => a.sort - b.sort)
+  let result = [...group, ...extraComponent].sort((a, b) => a.sort - b.sort)
   // 所有自定义或者扩展组件放置的地方
-  const modules = import.meta.glob('@/components/*.vue')
+  const modules = import.meta.glob('@/components/components/*.vue')
   result.forEach((item) => {
     item.items.forEach(async (item) => {
       // 异步组件加载
       if (item.componentPath) {
         // 加载异步组件
-        item.is = defineAsyncComponent(modules[`/src/components/${item.componentPath}`] as any)
+        item.is = defineAsyncComponent(
+          modules[`/src/components/components/${item.componentPath}`] as any,
+        )
       }
     })
   })

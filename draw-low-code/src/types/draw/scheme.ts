@@ -5,6 +5,7 @@
  * @date: 2025/9/2 09:37
  */
 import type { Component, HTMLAttributes } from 'vue'
+import type { SettingPlugin, SettingPluginGroup } from '@/types/draw/setting.ts'
 
 // 协议信息
 interface DrawScheme {
@@ -21,6 +22,10 @@ interface PageConfig extends ComponentStyle {
   children?: Array<ComponentItem>
   // 原生属性
   attrs?: Partial<HTMLAttributes>
+  // 页面设计插件
+  settings?: Array<SettingPlugin>
+  // 页面设计器组
+  groups?: Array<SettingPluginGroup>
 }
 
 // 组件组
@@ -51,8 +56,10 @@ interface ComponentItem extends ComponentStyle {
   // 可以嵌套的名称
   canNestElements?: Array<string>
 
-  // todo 每一个组件都有对应的设计器
-  settings?: Array<any>
+  // 组件设计器
+  settings?: Array<SettingPlugin>
+  // 页面设计器组
+  groups?: Array<SettingPluginGroup>
 
   // 组件特定配置
   // 组件路径

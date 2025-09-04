@@ -8,7 +8,7 @@ import { defineStore } from 'pinia'
 import { computed, type Ref, ref } from 'vue'
 import type { ComponentItem, PageConfig } from '@/types/draw/scheme.ts'
 
-type ActiveComponent = ComponentItem | PageConfig | null
+export type ActiveComponent = ComponentItem | PageConfig | null
 // 用于记录当前活跃组件的dom
 export let beforeActiveComponentDom: HTMLElement | null = null
 export const useActiveComponentStore = defineStore(
