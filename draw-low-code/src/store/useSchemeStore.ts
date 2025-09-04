@@ -79,8 +79,10 @@ export const useSchemeStore = defineStore(
       let item: ComponentItem = {
         ...componentItem,
       } as any
+      let isAdd = false
       // 保留原来的id
       if (!item.id) {
+        isAdd = true
         item.id = 'uuid-' + uuidv4()
       }
       let closestNodeId = closestNode.getAttribute('data-id')
@@ -90,7 +92,8 @@ export const useSchemeStore = defineStore(
         activeComponents = children
       } else {
         // 非顶级就是父级的下一级,当上级没有时，说明是顶级节点，只有顶级节点没有父级
-        activeComponents = componentItem.parent?.children ?? children
+        let parent = findComponentItemById(componentItem.parentId!)
+        activeComponents = parent?.children ?? children
       }
       // 找到对应的位置
       let index = activeComponents.findIndex((item) => item.id === closestNodeId)
@@ -111,14 +114,15 @@ export const useSchemeStore = defineStore(
           console.log('放到中间')
           activeComponents.splice(Math.ceil(activeComponents.length / 2), 0, item)
       }
-
-      // 默认新增的激活
-      await nextTick()
-      let dom = document.querySelector('.' + item.id)
-      if (dom) {
-        let activeComponentStore = useActiveComponentStore()
-        activeComponentStore.clearActiveComponent()
-        activeComponentStore.setActiveComponent({ target: dom } as unknown as Event, item)
+      if (isAdd) {
+        // 默认新增的激活
+        await nextTick()
+        let dom = document.querySelector('.' + item.id)
+        if (dom) {
+          let activeComponentStore = useActiveComponentStore()
+          activeComponentStore.clearActiveComponent()
+          activeComponentStore.setActiveComponent({ target: dom } as unknown as Event, item)
+        }
       }
     }
 
@@ -179,7 +183,7 @@ export const useSchemeStore = defineStore(
         // 放在顶层
         // @ts-ignore
         // 既然要放在顶层，那父节点肯定没有
-        componentItem.parent = undefined
+        componentItem.parentId = undefined
         addComponent(scheme.value.page.children!, componentItem, closestNode, closestNodePosition)
       } else {
         // 找到目标节点，作为子节点放入
@@ -188,7 +192,7 @@ export const useSchemeStore = defineStore(
           if (!targetComponentItem?.children) {
             targetComponentItem.children = []
           }
-          componentItem.parent = targetComponentItem
+          componentItem.parentId = targetComponentItem.id
           addComponent(
             targetComponentItem.children,
             componentItem,

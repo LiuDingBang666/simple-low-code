@@ -76,8 +76,8 @@ interface ComponentItem extends ComponentStyle {
   id?: string
   // 组件子节点
   children?: Array<ComponentItem>
-  // 父节点
-  parent?: ComponentItem
+  // 父节点id
+  parentId?: string
 }
 
 // 组件样式

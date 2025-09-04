@@ -22,6 +22,9 @@ export const useActiveComponentStore = defineStore(
     // actions
     function setActiveComponent(event: Event, newActiveComponent: ActiveComponent) {
       if (beforeActiveComponentDom != null) {
+        if (event.target === beforeActiveComponentDom) {
+          return
+        }
         beforeActiveComponentDom.classList.remove('active-component')
       }
       beforeActiveComponentDom = event.target as HTMLElement
@@ -31,6 +34,9 @@ export const useActiveComponentStore = defineStore(
     }
 
     function clearActiveComponent() {
+      if (beforeActiveComponentDom === null) {
+        return
+      }
       console.log('清除当前活跃组件')
       if (beforeActiveComponentDom != null) {
         beforeActiveComponentDom.classList.remove('active-component')
