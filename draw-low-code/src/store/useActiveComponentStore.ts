@@ -11,7 +11,7 @@ import useSchemeStore from '@/store/useSchemeStore.ts'
 
 type ActiveComponent = ComponentItem | PageConfig | null
 // 用于记录当前活跃组件的dom
-export const activeComponentDomStack: Array<HTMLElement> = []
+export let beforeActiveComponentDom: HTMLElement | null = null
 export const useActiveComponentStore = defineStore(
   'active-component',
   () => {
@@ -20,27 +20,21 @@ export const useActiveComponentStore = defineStore(
 
     // actions
     function setActiveComponent(event: Event, newActiveComponent: ActiveComponent) {
-      activeComponentDomStack.push(event.target as HTMLElement)
-      console.log(activeComponentDomStack)
-      let current = activeComponentDomStack[activeComponentDomStack.length - 1]
-      console.log(current)
-      current.classList.add('active-component')
-      activeComponentDomStack.forEach((item) => {
-        if (item !== current) {
-          item.classList.remove('active-component')
-        }
-      })
-
+      if (beforeActiveComponentDom != null) {
+        beforeActiveComponentDom.classList.remove('active-component')
+      }
+      beforeActiveComponentDom = event.target as HTMLElement
+      beforeActiveComponentDom.classList.add('active-component')
       console.log('当前活跃组件:', newActiveComponent)
       activeComponent.value = newActiveComponent
     }
 
     function clearActiveComponent() {
       console.log('清除当前活跃组件')
-      activeComponentDomStack.forEach((item) => {
-        item.classList.remove('active-component')
-      })
-      activeComponentDomStack.length = 0
+      if (beforeActiveComponentDom != null) {
+        beforeActiveComponentDom.classList.remove('active-component')
+      }
+      beforeActiveComponentDom = null
       activeComponent.value = useSchemeStore().getScheme().value.page
     }
 
