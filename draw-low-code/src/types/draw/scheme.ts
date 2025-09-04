@@ -15,6 +15,8 @@ interface DrawScheme {
 }
 
 interface PageConfig extends ComponentStyle {
+  // 是否是页面
+  isPage: true
   // 页面节点
   children?: Array<ComponentItem>
   // 原生属性
@@ -76,8 +78,6 @@ interface ComponentItem extends ComponentStyle {
   children?: Array<ComponentItem>
   // 父节点
   parent?: ComponentItem
-
-  // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象,暂且直接修改属性实现
 }
 
 // 组件样式
@@ -94,4 +94,4 @@ interface ComponentStyle {
   }
 }
 
-export type { DrawScheme, ComponentStyle, ComponentItem, ComponentGroup }
+export type { DrawScheme, ComponentStyle, ComponentItem, ComponentGroup, PageConfig }

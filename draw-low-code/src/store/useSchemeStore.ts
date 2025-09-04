@@ -14,6 +14,7 @@ import type { DragPosition } from '@/hooks/useDrawHooks.ts'
 const defaultScheme: DrawScheme = {
   version: '1.0.0',
   page: {
+    isPage: true,
     style: {
       padding: '10px',
     },
@@ -51,7 +52,10 @@ export const useSchemeStore = defineStore(
      * 清空协议信息
      */
     function clearScheme() {
-      scheme.value = { version: '1.0.0', page: { style: { padding: '10px' }, children: [] } }
+      scheme.value = {
+        version: '1.0.0',
+        page: { isPage: true, style: { padding: '10px' }, children: [] },
+      }
       ElMessage.success('重置成功')
     }
 

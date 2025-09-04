@@ -30,6 +30,7 @@
 import type { ComponentItem } from '@/types/draw/scheme.ts'
 import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
 import { parseStyles } from '@/pages/draw/render/parse-styles.ts'
+import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 
 let props = withDefaults(
   defineProps<{
@@ -42,8 +43,8 @@ let props = withDefaults(
 )
 
 function handlerClick(e: Event, item: ComponentItem) {
-  console.log(e.target)
-  console.log(e, item)
+  let store = useActiveComponentStore()
+  store.setActiveComponent(e, item)
 }
 </script>
 

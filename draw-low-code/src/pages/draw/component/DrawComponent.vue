@@ -5,6 +5,7 @@
 -->
 
 <template>
+  <div class="title">组件库</div>
   <el-collapse v-model="activeName">
     <el-collapse-item
       :title="groupItem.name"
@@ -75,5 +76,14 @@ onMounted(async () => {
 .component-list {
   display: flex;
   flex-wrap: wrap;
+}
+
+.title {
+  width: 100%;
+  font-weight: bold;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>

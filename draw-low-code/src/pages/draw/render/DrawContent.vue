@@ -11,6 +11,7 @@
     id="render-component"
     data-id="top-node"
     :style="pageStyle"
+    @click.prevent.stop="(e: Event) => handlerClick(e)"
   >
     <DrawRender :components="getScheme().value.page.children!" />
   </div>
@@ -21,6 +22,7 @@ import DrawRender from '@/pages/draw/render/DrawRender.vue'
 import useSchemeStore from '@/store/useSchemeStore.ts'
 import { computed } from 'vue'
 import { parseStyles } from '@/pages/draw/render/parse-styles.ts'
+import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 
 const { getScheme } = useSchemeStore()
 // style > id > class
@@ -28,6 +30,13 @@ const pageStyle = computed(() => {
   const { page } = getScheme().value
   return parseStyles(page)
 })
+
+let { setActiveComponent } = useActiveComponentStore()
+
+function handlerClick(e: Event) {
+  // @ts-ignore
+  setActiveComponent(e, getScheme().value.page)
+}
 </script>
 
 <style scoped lang="scss">
