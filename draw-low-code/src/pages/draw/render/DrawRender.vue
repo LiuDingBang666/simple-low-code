@@ -19,8 +19,7 @@
     :class="[item.id]"
     @click.stop="(e: Event) => handlerClick(e, item)"
   >
-    <template v-if="item.value"> {{ item.value }}</template>
-    <template v-else-if="item.showTitle && item.title">
+    <template v-if="item.showTitle && item.title">
       {{ item.title }}
     </template>
     <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />

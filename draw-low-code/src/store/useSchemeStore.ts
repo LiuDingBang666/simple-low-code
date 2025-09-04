@@ -21,8 +21,6 @@ const defaultScheme: DrawScheme = {
       padding: '10px',
     },
     children: [],
-    settings: getInheritSettings(),
-    groups: getInheritSettingGroup(),
   },
 }
 export const useSchemeStore = defineStore(
@@ -30,7 +28,8 @@ export const useSchemeStore = defineStore(
   () => {
     // state
     const scheme = ref<DrawScheme>(defaultScheme)
-
+    scheme.value.page.settings = getInheritSettings()
+    scheme.value.page.groups = getInheritSettingGroup()
     // actions
     watch(scheme.value, () => {
       console.log('当前协议信息:')
@@ -56,9 +55,18 @@ export const useSchemeStore = defineStore(
      * 清空协议信息
      */
     function clearScheme() {
-      let temp: DrawScheme = { ...defaultScheme }
-      temp.page.children = []
-      scheme.value = temp
+      scheme.value = {
+        version: '1.0.0',
+        page: {
+          isPage: true,
+          style: {
+            padding: '10px',
+          },
+          children: [],
+          settings: getInheritSettings(),
+          groups: getInheritSettingGroup(),
+        },
+      }
       ElMessage.success('重置成功')
     }
 
@@ -254,6 +262,7 @@ export const useSchemeStore = defineStore(
      */
     function updatePage(page: PageConfig) {
       Object.assign(scheme.value.page, page)
+      console.log(scheme.value.page)
     }
 
     /**

@@ -26,6 +26,8 @@ interface PageConfig extends ComponentStyle {
   settings?: Array<SettingPlugin>
   // 页面设计器组
   groups?: Array<SettingPluginGroup>
+  // 默认值
+  value?: any
 }
 
 // 组件组
@@ -34,6 +36,7 @@ interface ComponentGroup {
   sort: number
   // 组名称
   name: string
+
   // 组件项
   items: Array<Omit<ComponentItem, 'id'>>
 }

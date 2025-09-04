@@ -6,6 +6,7 @@
  */
 import type { ComponentGroup } from '@/types/draw/scheme'
 import { defineAsyncComponent } from 'vue'
+import { getInheritSettingGroup, getInheritSettings } from '@/pages/draw/setting/setting-config.ts'
 
 export default function initGroup(extraComponent: ComponentGroup[] = []): Array<ComponentGroup> {
   let group: Array<ComponentGroup> = [
@@ -27,6 +28,8 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
             margin: '10px',
           },
           isNative: true,
+          groups: getInheritSettingGroup(),
+          settings: getInheritSettings(),
         },
         {
           name: 'p',

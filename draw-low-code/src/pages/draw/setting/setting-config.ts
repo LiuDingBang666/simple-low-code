@@ -18,8 +18,8 @@ export function initAllSetting(settings: SettingPlugin[]) {
   all.forEach((setting) => {
     // 更新当前组件
     setting.updateComponent = (item: ComponentItem | PageConfig) => {
-      if ('isPage' in item && item.isPage) {
-        updatePage(item)
+      if (!setting.componentInstanceId) {
+        updatePage(item as PageConfig)
       } else {
         updateComponentById(setting.componentInstanceId!, item as ComponentItem)
       }
@@ -27,15 +27,19 @@ export function initAllSetting(settings: SettingPlugin[]) {
     // 获取当前组件
     // @ts-ignore
     setting.getCurrentComponent = () => {
-      if ('isPage' in getPage() && getPage().isPage) {
+      if (!setting.componentInstanceId) {
         return getPage()
       }
       return findComponentItemById(setting.componentInstanceId!)
     }
     // 渲染当前组件
-    setting.is = defineAsyncComponent(
-      modules[`/src/components/settings/${setting.componentPath}`] as any,
-    )
+    try {
+      setting.is = defineAsyncComponent(
+        modules[`/src/components/settings/${setting.componentPath}`] as any,
+      )
+    } catch (e) {
+      console.error(e)
+    }
   })
   return all
 }
@@ -77,7 +81,7 @@ export const getInheritSettings = (): Array<SettingPlugin> => {
       group: '基础',
       name: '代码编辑设置',
       sort: 1,
-      componentPath: 'CodeEditorSetting.vue',
+      componentPath: 'CodeStyleEditorSetting.vue',
     },
   ]
 }
