@@ -59,7 +59,7 @@ export function mergeSettingPluginGroup(
   return group.sort((a, b) => a.sort - b.sort).filter((item) => item.settings.length > 0)
 }
 
-// 内置设计器组
+// 内置设计器组-基础设计组，有需要自选
 export const getInheritSettingGroup = (): Array<SettingPluginGroup> => {
   return [
     {
@@ -70,7 +70,7 @@ export const getInheritSettingGroup = (): Array<SettingPluginGroup> => {
     },
   ]
 }
-// 内置设计器
+// 内置设计器-基础设计器，有需要自选,所有设计器必须放置在@/components/settings文件夹下
 export const getInheritSettings = (): Array<SettingPlugin> => {
   return [
     {

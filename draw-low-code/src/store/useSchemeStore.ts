@@ -56,10 +56,9 @@ export const useSchemeStore = defineStore(
      * 清空协议信息
      */
     function clearScheme() {
-      scheme.value = {
-        version: '1.0.0',
-        page: { isPage: true, style: { padding: '10px' }, children: [] },
-      }
+      let temp: DrawScheme = { ...defaultScheme }
+      temp.page.children = []
+      scheme.value = temp
       ElMessage.success('重置成功')
     }
 

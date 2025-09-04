@@ -24,12 +24,13 @@
         />
       </el-collapse-item>
     </el-collapse>
+    <div v-if="isNoSetting" class="select-tip">请先配置设置器...</div>
   </div>
   <div v-else class="select-tip">请先选择组件...</div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import useActiveComponentStore, { type ActiveComponent } from '@/store/useActiveComponentStore.ts'
 import type { SettingPlugin, SettingPluginGroup } from '@/types/draw/setting.ts'
 import { initAllSetting, mergeSettingPluginGroup } from '@/pages/draw/setting/setting-config.ts'
@@ -48,6 +49,16 @@ function getAllSettingGroupByComponentItem(
   let settings: Array<SettingPlugin> = initAllSetting(currentComponent?.settings ?? [])
   return mergeSettingPluginGroup(currentComponent?.groups ?? [], settings)
 }
+
+const isNoSetting = computed(() => {
+  let component = getActiveComponent().value
+  return (
+    !component?.groups ||
+    component?.groups.length === 0 ||
+    !component?.settings ||
+    component?.settings?.length === 0
+  )
+})
 </script>
 
 <style scoped lang="scss">
