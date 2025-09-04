@@ -5,11 +5,12 @@
  * @date: 2025/9/1 15:26
  */
 import { defineStore } from 'pinia'
-import { computed, ref, watch } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
 import type { DragPosition } from '@/hooks/useDrawHooks.ts'
+import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 
 const defaultScheme: DrawScheme = {
   version: '1.0.0',
@@ -66,7 +67,7 @@ export const useSchemeStore = defineStore(
      * @param closestNodePosition 放置位置
      * @param closestNode 临近节点
      */
-    function addComponent(
+    async function addComponent(
       children: Array<ComponentItem>,
       componentItem: ComponentItem,
       closestNode: Element,
@@ -80,7 +81,7 @@ export const useSchemeStore = defineStore(
       } as any
       // 保留原来的id
       if (!item.id) {
-        item.id = uuidv4()
+        item.id = 'uuid-' + uuidv4()
       }
       let closestNodeId = closestNode.getAttribute('data-id')
       let activeComponents: Array<ComponentItem> = []
@@ -109,6 +110,15 @@ export const useSchemeStore = defineStore(
         case 'center':
           console.log('放到中间')
           activeComponents.splice(Math.ceil(activeComponents.length / 2), 0, item)
+      }
+
+      // 默认新增的激活
+      await nextTick()
+      let dom = document.querySelector('.' + item.id)
+      if (dom) {
+        let activeComponentStore = useActiveComponentStore()
+        activeComponentStore.clearActiveComponent()
+        activeComponentStore.setActiveComponent({ target: dom } as unknown as Event, item)
       }
     }
 

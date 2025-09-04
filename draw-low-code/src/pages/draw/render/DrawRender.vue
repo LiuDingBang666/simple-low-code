@@ -16,6 +16,7 @@
     :ref="(e: any) => refInitDrawHooks(e, item)"
     v-bind="{ ...item.attrs, ...item.props }"
     id="render-component"
+    :class="[item.id]"
     @click.stop="(e: Event) => handlerClick(e, item)"
   >
     <template v-if="item.value"> {{ item.value }}</template>

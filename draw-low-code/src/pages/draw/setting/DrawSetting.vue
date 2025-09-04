@@ -17,12 +17,9 @@
 
 <script setup lang="ts">
 import type { CollapseModelValue } from 'element-plus'
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import CodeEditor from '@/components/CodeEditor.vue'
-import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 
-let { activeComponent } = useActiveComponentStore()
-watch(activeComponent, () => {})
 const activeNames = ref(['1'])
 let value = ref('')
 const handleChange = (val: CollapseModelValue) => {
