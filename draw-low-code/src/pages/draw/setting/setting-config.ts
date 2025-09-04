@@ -5,23 +5,31 @@
  * @date: 2025/9/4 14:22
  */
 import type { SettingPlugin, SettingPluginGroup } from '@/types/draw/setting.ts'
-import type { ComponentItem } from '@/types/draw/scheme.ts'
+import type { ComponentItem, PageConfig } from '@/types/draw/scheme.ts'
 import useSchemeStore from '@/store/useSchemeStore.ts'
 import { defineAsyncComponent } from 'vue'
 
 // 初始化设计器
 export function initAllSetting(settings: SettingPlugin[]) {
   let all: Array<SettingPlugin> = settings.sort((a, b) => a.sort - b.sort)
-  const { findComponentItemById, updateComponentById } = useSchemeStore()
+  const { findComponentItemById, updateComponentById, updatePage, getPage } = useSchemeStore()
   // 自动注入与组件相关的方法
   const modules = import.meta.glob('@/components/settings/*.vue')
   all.forEach((setting) => {
     // 更新当前组件
-    setting.updateComponent = (item: ComponentItem) => {
-      updateComponentById(setting.componentInstanceId!, item)
+    setting.updateComponent = (item: ComponentItem | PageConfig) => {
+      if ('isPage' in item && item.isPage) {
+        updatePage(item)
+      } else {
+        updateComponentById(setting.componentInstanceId!, item as ComponentItem)
+      }
     }
     // 获取当前组件
+    // @ts-ignore
     setting.getCurrentComponent = () => {
+      if ('isPage' in getPage() && getPage().isPage) {
+        return getPage()
+      }
       return findComponentItemById(setting.componentInstanceId!)
     }
     // 渲染当前组件

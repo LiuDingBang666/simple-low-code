@@ -12,7 +12,7 @@
   >
     <el-collapse v-model="activeNames">
       <el-collapse-item
-        v-for="(group, groupIdx) in getAllSettingGroupByComponentItem(getActiveComponent().value)"
+        v-for="(group, groupIdx) in getAllSettingGroupByComponentItem(getActiveComponent().value!)"
         v-bind="group"
         :key="groupIdx"
       >
@@ -23,12 +23,6 @@
           v-bind="setting"
         />
       </el-collapse-item>
-      <div
-        class="select-tip"
-        v-if="getAllSettingGroupByComponentItem(getActiveComponent().value).length === 0"
-      >
-        请先配置该组件的属性设置...
-      </div>
     </el-collapse>
   </div>
   <div v-else class="select-tip">请先选择组件...</div>
@@ -46,13 +40,13 @@ let { getActiveComponent } = useActiveComponentStore()
 
 /**
  * 获取所有设计器组级设计器信息
- * @param activeComponent 当前活跃组件
+ * @param currentComponent 当前活跃组件
  */
 function getAllSettingGroupByComponentItem(
-  activeComponent: ActiveComponent,
+  currentComponent: ActiveComponent,
 ): Array<SettingPluginGroup> {
-  let settings: Array<SettingPlugin> = initAllSetting(activeComponent?.settings ?? [])
-  return mergeSettingPluginGroup(activeComponent?.groups ?? [], settings)
+  let settings: Array<SettingPlugin> = initAllSetting(currentComponent?.settings ?? [])
+  return mergeSettingPluginGroup(currentComponent?.groups ?? [], settings)
 }
 </script>
 

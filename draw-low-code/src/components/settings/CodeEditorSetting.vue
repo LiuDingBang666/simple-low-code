@@ -19,10 +19,11 @@
 </template>
 
 <script setup lang="ts">
-import { shallowRef } from 'vue'
+import { onMounted, shallowRef, useAttrs } from 'vue'
 import { Codemirror } from 'vue-codemirror'
 import { css } from '@codemirror/lang-css'
 import { sass } from '@codemirror/lang-sass'
+import type { SettingPlugin } from '@/types/draw/setting.ts'
 
 const value = defineModel('value', { default: '.example {\n  background: red;\n}' })
 
@@ -43,6 +44,13 @@ function log(eventName: string, payload: Event) {
     emits('change', payload)
   }
 }
+
+let setting: SettingPlugin = useAttrs() as unknown as SettingPlugin
+onMounted(() => {
+  if (setting.getCurrentComponent) {
+    console.log(setting.getCurrentComponent())
+  }
+})
 </script>
 
 <style scoped lang="scss"></style>

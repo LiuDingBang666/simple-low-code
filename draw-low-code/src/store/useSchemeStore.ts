@@ -6,7 +6,7 @@
  */
 import { defineStore } from 'pinia'
 import { computed, nextTick, ref, watch } from 'vue'
-import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
+import type { ComponentItem, DrawScheme, PageConfig } from '@/types/draw/scheme.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
 import type { DragPosition } from '@/hooks/useDrawHooks.ts'
@@ -160,7 +160,7 @@ export const useSchemeStore = defineStore(
      * 新增组件到协议中
      * @param data e:事件 targetDom:承载的元素 activeDom:当前 componentItem:组件项
      */
-    function updateComponent(data: {
+    async function updateComponent(data: {
       e: DragEvent
       targetDom: HTMLElement
       activeDom: HTMLElement
@@ -191,7 +191,12 @@ export const useSchemeStore = defineStore(
         // @ts-ignore
         // 既然要放在顶层，那父节点肯定没有
         componentItem.parentId = undefined
-        addComponent(scheme.value.page.children!, componentItem, closestNode, closestNodePosition)
+        await addComponent(
+          scheme.value.page.children!,
+          componentItem,
+          closestNode,
+          closestNodePosition,
+        )
       } else {
         // 找到目标节点，作为子节点放入
         const targetComponentItem = findComponentItemById(id)
@@ -200,7 +205,7 @@ export const useSchemeStore = defineStore(
             targetComponentItem.children = []
           }
           componentItem.parentId = targetComponentItem.id
-          addComponent(
+          await addComponent(
             targetComponentItem.children,
             componentItem,
             closestNode,
@@ -244,6 +249,21 @@ export const useSchemeStore = defineStore(
       }
     }
 
+    /**
+     * 更新页面
+     * @param page
+     */
+    function updatePage(page: PageConfig) {
+      Object.assign(scheme.value.page, page)
+    }
+
+    /**
+     * 获取页面
+     */
+    function getPage() {
+      return scheme.value.page
+    }
+
     // expose
     return {
       scheme,
@@ -253,6 +273,8 @@ export const useSchemeStore = defineStore(
       updateComponent,
       findComponentItemById,
       updateComponentById,
+      updatePage,
+      getPage,
     }
   },
   {
