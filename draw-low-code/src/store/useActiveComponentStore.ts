@@ -7,7 +7,6 @@
 import { defineStore } from 'pinia'
 import { computed, type Ref, ref } from 'vue'
 import type { ComponentItem, PageConfig } from '@/types/draw/scheme.ts'
-import useSchemeStore from '@/store/useSchemeStore.ts'
 
 type ActiveComponent = ComponentItem | PageConfig | null
 // 用于记录当前活跃组件的dom
@@ -34,15 +33,12 @@ export const useActiveComponentStore = defineStore(
     }
 
     function clearActiveComponent() {
-      if (beforeActiveComponentDom === null) {
-        return
-      }
       console.log('清除当前活跃组件')
       if (beforeActiveComponentDom != null) {
         beforeActiveComponentDom.classList.remove('active-component')
       }
       beforeActiveComponentDom = null
-      activeComponent.value = useSchemeStore().getScheme().value.page
+      activeComponent.value = null
     }
 
     /**

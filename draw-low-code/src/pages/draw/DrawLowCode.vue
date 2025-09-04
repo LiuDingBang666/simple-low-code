@@ -23,7 +23,7 @@
       <el-col class="content" :span="16">
         <DrawContent />
       </el-col>
-      <el-col class="setting" :span="4">
+      <el-col class="setting" :span="4" @click.stop>
         <DrawSetting />
       </el-col>
     </el-row>
@@ -43,9 +43,10 @@ import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 const title = import.meta.env.VITE_APP_TITLE
 
 let scheme = useSchemeStore()
-
+let activeComponent = useActiveComponentStore()
 function reset() {
   scheme.clearScheme()
+  activeComponent.clearActiveComponent()
 }
 
 const router = useRouter()
@@ -59,7 +60,7 @@ function resetActive() {
 }
 
 onUnmounted(() => {
-  useActiveComponentStore().clearActiveComponent()
+  resetActive()
 })
 </script>
 

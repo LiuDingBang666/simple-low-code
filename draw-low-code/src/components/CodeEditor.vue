@@ -32,7 +32,7 @@ const view = shallowRef()
 
 const handleReady = (payload: any) => {
   view.value = payload.view
-  console.log(view.value)
+  // console.log(view.value)
 }
 
 const emits = defineEmits(['change'])
