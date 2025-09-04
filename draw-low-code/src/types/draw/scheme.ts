@@ -77,7 +77,7 @@ interface ComponentItem extends ComponentStyle {
   // 父节点
   parent?: ComponentItem
 
-  // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象
+  // todo 如果需要定义方法的话，学习成本会不会增加一些？因为本来就是响应式对象,暂且直接修改属性实现
 }
 
 // 组件样式
