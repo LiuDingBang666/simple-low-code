@@ -13,6 +13,12 @@ import type { ComponentStyle } from '@/types/draw/scheme.ts'
  */
 export function parseStyles(component: ComponentStyle) {
   let afterStyle: Partial<StyleSheet> = {}
+  if (component.defaultStyle) {
+    afterStyle = {
+      ...afterStyle,
+      ...component.defaultStyle,
+    }
+  }
   if (component.classStyle) {
     Object.keys(component.classStyle).map((key) => {
       afterStyle = {

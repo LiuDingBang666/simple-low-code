@@ -92,6 +92,8 @@ interface ComponentItem extends ComponentStyle {
 
 // 组件样式
 interface ComponentStyle {
+  // 默认样式
+  defaultStyle?: Partial<CSSStyleDeclaration>
   // 内联样式
   style?: Partial<CSSStyleDeclaration>
   // 类名对应的样式
