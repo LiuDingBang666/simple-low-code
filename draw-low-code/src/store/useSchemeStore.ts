@@ -156,6 +156,53 @@ export const useSchemeStore = defineStore(
     }
 
     /**
+     * 判断当前承载节点是否是待放置组件的节点
+     * @param id 承载节点id
+     * @param componentItem 待放置组件
+     */
+    function isChild(id: string, componentItem: ComponentItem) {
+      if (!componentItem.children) {
+        return false
+      }
+      for (let i = 0; i < componentItem.children.length; i++) {
+        if (componentItem.children[i].id === id) {
+          return true
+        }
+        if (componentItem.children[i].children) {
+          if (isChild(id, componentItem.children[i])) {
+            return true
+          }
+        }
+      }
+      return false
+    }
+
+    /**
+     * 判断当前dom是否可以更新
+     * @param targetDom 目标dom
+     * @param componentItem
+     */
+    function isCanUpdate(targetDom: HTMLElement, componentItem: ComponentItem) {
+      let id = targetDom.getAttribute('data-id') as string
+      if (!id) {
+        console.error('当前元素没有data-id属性')
+        return false
+      }
+      // 承载节点是父节点，可以直接更新
+      if (id === 'top-node') {
+        return true
+      }
+      if (componentItem.id) {
+        // 当前是已存在节点，判断承载节点是不是当前节点的子节点，如果有，则不允许更新
+        if (isChild(id, componentItem)!) {
+          ElMessage.error('父组件不能添加到子组件下')
+          return false
+        }
+      }
+      return true
+    }
+
+    /**
      * 新增组件到协议中
      * @param data e:事件 targetDom:承载的元素 activeDom:当前 componentItem:组件项
      */
@@ -175,16 +222,17 @@ export const useSchemeStore = defineStore(
       console.log('当前临近节点', closestNode)
       console.log('当前位置', closestNodePosition)
 
+      // 判断是否可以更新
+      if (!isCanUpdate(targetDom, componentItem)) {
+        return
+      }
+
       // 修改,先删除当前节点，再放入到指定节点中
       if (componentItem.id) {
         deleteComponentById(componentItem.id)
       }
       // 有data-id的元素才是合法的承载对象
-      const id = targetDom.getAttribute('data-id')
-      if (id == null) {
-        console.error('当前元素没有data-id属性')
-        return
-      }
+      const id = targetDom.getAttribute('data-id')!
       // 是否放在顶层
       if (id === 'top-node') {
         // 放在顶层
