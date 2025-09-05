@@ -43,10 +43,10 @@ interface SettingPlugin {
   getCurrentComponent?: () => ComponentItem | PageConfig | undefined
   // 设计器单独的属性配置信息，每个设计器都可以支持自定义配置
   props?: Record<string, any>
-  // 设计器绑定的当前组件实例id
-  componentInstanceId?: string
   // 是否初始化
   isInit?: boolean
+  // 设计器绑定的当前组件实例id-暂无使用场景
+  componentInstanceId?: string
 }
 
 export type { SettingPluginGroup, SettingPlugin }
