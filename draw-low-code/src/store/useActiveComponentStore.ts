@@ -33,7 +33,9 @@ export const useActiveComponentStore = defineStore(
     }
 
     function clearActiveComponent() {
-      console.log('清除当前活跃组件')
+      if (activeComponent.value == null) {
+        return
+      }
       if (beforeActiveComponentDom != null) {
         beforeActiveComponentDom.classList.remove('active-component')
       }

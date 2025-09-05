@@ -102,7 +102,6 @@ const useDrawHooks = (
         let allComponentDoms = [...document.querySelectorAll('#render-component')]
         let closestNode = getClosestNode(e, allComponentDoms)! as HTMLElement
         let positionNode: HTMLElement | null = null
-        let position = getDragPosition(e, target)
         let { getPage, findComponentItemById } = useSchemeStore()
         if (dataId === 'top-node') {
           if (getPage().children!.length > 0) {
@@ -118,6 +117,7 @@ const useDrawHooks = (
             positionNode = target
           }
         }
+        let position = getDragPosition(e, positionNode)
         if (beforeNode === positionNode && beforePosition === position) {
           return
         }
