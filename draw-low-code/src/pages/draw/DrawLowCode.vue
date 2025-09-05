@@ -97,7 +97,7 @@ onUnmounted(() => {
   }
 
   .setting {
-    overflow-x: hidden;
+    overflow: hidden;
     border-left: 0.5px solid rgba(128, 128, 128, 0.3);
     border-top-width: 0px;
     height: 100%;

@@ -16,12 +16,13 @@
         v-bind="group"
         :key="groupIdx"
       >
-        <Component
+        <template
           v-for="(setting, settingIdx) in group.settings"
-          :key="groupIdx + '' + settingIdx"
-          :is="setting.is"
-          v-bind="setting"
-        />
+          :key="groupIdx + '-' + settingIdx"
+        >
+          <el-tag>{{ setting.name }}</el-tag>
+          <Component :is="setting.is" v-bind="setting" />
+        </template>
       </el-collapse-item>
     </el-collapse>
     <div v-if="isNoSetting" class="select-tip">请先配置设置器...</div>
@@ -81,5 +82,8 @@ const isNoSetting = computed(() => {
   margin-top: 20px;
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
+}
+.el-tag {
+  margin: 5px;
 }
 </style>

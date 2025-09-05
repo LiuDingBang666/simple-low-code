@@ -83,7 +83,7 @@ export const getInheritSettings = (): Array<SettingPlugin> => {
   return [
     {
       group: '基础',
-      name: '代码编辑设置',
+      name: '代码样式编辑设置器',
       sort: 1,
       componentPath: 'CodeStyleEditorSetting.vue',
     },
