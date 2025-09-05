@@ -9,7 +9,7 @@ import UseSchemeStore from '@/store/useSchemeStore.ts'
  * @date: 2025/9/5 09:09
  */
 export function useKeyHooks(callback?: (ev: KeyboardEvent) => void) {
-  let { getActiveComponent } = useActiveComponentStore()
+  let { getActiveComponent, clearActiveComponent } = useActiveComponentStore()
   let { deleteComponentById } = UseSchemeStore()
 
   function handlerKeyEvent() {
@@ -19,6 +19,7 @@ export function useKeyHooks(callback?: (ev: KeyboardEvent) => void) {
         let current = getActiveComponent().value
         if (current && 'id' in current && current.id) {
           deleteComponentById(current.id)
+          clearActiveComponent()
         }
       }
       if (callback) {
