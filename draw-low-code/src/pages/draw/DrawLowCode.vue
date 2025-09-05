@@ -12,8 +12,8 @@
         <el-button style="margin-left: 10px" type="danger" @click.stop="reset">重置</el-button>
         <el-button style="margin-left: 10px" type="warning" @click.stop="preview">预览</el-button>
         <el-button style="margin-left: 10px" type="success" @click.stop="developing"
-          >出码</el-button
-        >
+          >出码
+        </el-button>
       </el-col>
     </el-row>
     <el-row class="content">
@@ -39,18 +39,20 @@ import { useRouter } from 'vue-router'
 import DrawSetting from '@/pages/draw/setting/DrawSetting.vue'
 import { onUnmounted } from 'vue'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
+import { useKeyHooks } from '@/hooks/useKeyHooks.ts'
 
 const title = import.meta.env.VITE_APP_TITLE
 
 let scheme = useSchemeStore()
 let activeComponent = useActiveComponentStore()
+
 function reset() {
   scheme.clearScheme()
   activeComponent.clearActiveComponent()
 }
 
 const router = useRouter()
-
+useKeyHooks()
 function preview() {
   window.open(router.resolve('/preview').href, '_blank')
 }

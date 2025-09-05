@@ -280,6 +280,7 @@ export const useSchemeStore = defineStore(
       clearScheme,
       updateComponent,
       findComponentItemById,
+      deleteComponentById,
       updateComponentById,
       updatePage,
       getPage,
