@@ -11,11 +11,12 @@ import UseSchemeStore from '@/store/useSchemeStore.ts'
 export function useKeyHooks(callback?: (ev: KeyboardEvent) => void) {
   let { getActiveComponent, clearActiveComponent } = useActiveComponentStore()
   let { deleteComponentById } = UseSchemeStore()
+  let isFocus = false
 
   function handlerKeyEvent() {
     return (ev: KeyboardEvent) => {
       // console.log(ev)
-      if (ev.key === 'Backspace') {
+      if (ev.key === 'Backspace' && !isFocus) {
         let current = getActiveComponent().value
         if (current && 'id' in current && current.id) {
           deleteComponentById(current.id)
@@ -28,11 +29,33 @@ export function useKeyHooks(callback?: (ev: KeyboardEvent) => void) {
     }
   }
 
+  function handlerFocusin() {
+    return (event: any) => {
+      const el = event.target as any
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable) {
+        isFocus = true
+      }
+    }
+  }
+
+  function handlerFocusout() {
+    return (event: any) => {
+      const el = event.target as any
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable) {
+        isFocus = false
+      }
+    }
+  }
+
   onMounted(() => {
     document.addEventListener('keydown', handlerKeyEvent())
+    document.addEventListener('focusin', handlerFocusin())
+    document.addEventListener('focusout', handlerFocusout())
   })
 
   onUnmounted(() => {
     document.removeEventListener('keydown', handlerKeyEvent())
+    document.removeEventListener('focusin', handlerFocusin())
+    document.removeEventListener('focusout', handlerFocusout())
   })
 }

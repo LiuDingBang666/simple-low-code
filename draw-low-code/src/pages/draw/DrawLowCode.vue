@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <div @click="resetActive">
+  <div @click="resetActive" style="overflow: hidden">
     <el-row class="header">
       <el-col class="header-column" :span="24"
         >{{ title }}
@@ -20,7 +20,7 @@
       <el-col class="components" :span="4">
         <DrawComponent />
       </el-col>
-      <el-col class="content" :span="16">
+      <el-col class="main" :span="16">
         <DrawContent />
       </el-col>
       <el-col class="setting" :span="4" @click.stop>
@@ -81,17 +81,24 @@ onUnmounted(() => {
 
 .content {
   border: 0.5px solid rgba(128, 128, 128, 0.3);
-
   height: 90vh;
-
+  overflow-x: hidden;
   .components {
     overflow-x: hidden;
+    border-right: 0.5px solid rgba(128, 128, 128, 0.3);
     border-top-width: 0px;
     height: 100%;
     width: 100%;
   }
+  .main {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+  }
 
   .setting {
+    overflow-x: hidden;
+    border-left: 0.5px solid rgba(128, 128, 128, 0.3);
     border-top-width: 0px;
     height: 100%;
     width: 100%;

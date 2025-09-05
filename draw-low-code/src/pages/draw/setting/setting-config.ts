@@ -59,7 +59,7 @@ export function mergeSettingPluginGroup(
     )
     groupItem.settings.sort((a, b) => a.sort - b.sort)
   })
-  console.log('当前设计器组信息', group)
+  // console.log('当前设计器组信息', group)
   return group.sort((a, b) => a.sort - b.sort).filter((item) => item.settings.length > 0)
 }
 

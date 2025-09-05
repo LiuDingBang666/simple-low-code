@@ -9,7 +9,7 @@
     v-model="value"
     placeholder="请输入css样式..."
     :style="{ height: '75vh' }"
-    :autofocus="true"
+    :autofocus="false"
     :indent-with-tab="true"
     :tab-size="2"
     :extensions="extensions"
