@@ -114,7 +114,7 @@ function parseCssToRecord(css: string): CssRecord {
 let setting: SettingPlugin = useAttrs() as unknown as SettingPlugin
 onMounted(() => {
   let component = setting.getCurrentComponent()
-  console.log(component)
+  // console.log(component)
   if (component && component.value) {
     value.value = component.value
   }

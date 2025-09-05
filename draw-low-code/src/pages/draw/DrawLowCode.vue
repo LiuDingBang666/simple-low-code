@@ -11,9 +11,7 @@
         >{{ title }}
         <el-button style="margin-left: 10px" type="danger" @click.stop="reset">重置</el-button>
         <el-button style="margin-left: 10px" type="warning" @click.stop="preview">预览</el-button>
-        <el-button style="margin-left: 10px" type="success" @click.stop="developing"
-          >出码
-        </el-button>
+        <el-button style="margin-left: 10px" type="success" @click.stop="genCode">出码 </el-button>
       </el-col>
     </el-row>
     <el-row class="content">
@@ -34,13 +32,13 @@
 import DrawComponent from '@/pages/draw/component/DrawComponent.vue'
 import DrawContent from '@/pages/draw/render/DrawContent.vue'
 import useSchemeStore from '@/store/useSchemeStore.ts'
-import { developing } from '@/utils/tip.ts'
 import { useRouter } from 'vue-router'
 import DrawSetting from '@/pages/draw/setting/DrawSetting.vue'
 import { onMounted, onUnmounted } from 'vue'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 import { useKeyFunctionHooks } from '@/hooks/useKeyFunctionHooks.ts'
 import { ElNotification } from 'element-plus'
+import { genCode } from '@/pages/draw/gen-code/gen-code.ts'
 
 const title = import.meta.env.VITE_APP_TITLE
 
@@ -137,12 +135,15 @@ onMounted(() => {
 :global(.drop-hover-position-left) {
   border-left: 5px dashed lawngreen !important;
 }
+
 :global(.drop-hover-position-right) {
   border-right: 5px dashed lawngreen !important;
 }
+
 :global(.drop-hover-position-top) {
   border-top: 5px dashed lawngreen !important;
 }
+
 :global(.drop-hover-position-bottom) {
   border-bottom: 5px dashed lawngreen !important;
 }
