@@ -83,7 +83,8 @@ export const getInheritSettings = (): Array<SettingPlugin> => {
   return [
     {
       group: '基础',
-      name: '代码样式编辑设置器',
+      name: '样式编辑器',
+      tip: '只支持class样式',
       sort: 1,
       componentPath: 'CodeStyleEditorSetting.vue',
     },

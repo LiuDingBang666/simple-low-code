@@ -31,6 +31,8 @@ interface SettingPlugin {
   group: string
   // 设计器名称
   name: string
+  // 设计器提示
+  tip?: string
   // 排序
   sort: number
   // 设计器组件路径

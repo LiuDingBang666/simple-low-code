@@ -21,6 +21,7 @@
           :key="groupIdx + '-' + settingIdx"
         >
           <el-tag>{{ setting.name }}</el-tag>
+          <el-tag v-if="setting.tip" type="danger">{{ setting?.tip }}</el-tag>
           <Component :is="setting.is" v-bind="setting" />
         </template>
       </el-collapse-item>
@@ -75,6 +76,7 @@ const isNoSetting = computed(() => {
 .collapse {
   height: 100%;
   overflow: auto;
+  overflow-x: hidden;
 }
 
 .select-tip {
@@ -83,6 +85,7 @@ const isNoSetting = computed(() => {
   font-size: 13px;
   color: rgba(0, 0, 0, 0.87);
 }
+
 .el-tag {
   margin: 5px;
 }

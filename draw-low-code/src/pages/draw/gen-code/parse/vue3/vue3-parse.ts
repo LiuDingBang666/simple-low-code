@@ -4,9 +4,10 @@
  * @author: liudingbang
  * @date: 2025/9/5 14:33
  */
-import type { ComponentItem, DrawScheme, PageConfig } from '@/types/draw/scheme.ts'
+import type { ComponentItem, DrawScheme } from '@/types/draw/scheme.ts'
 import { getProjectAllCode } from '@/utils/file-utils.ts'
 import { ElMessage } from 'element-plus'
+import { type BaseResolver, getAllResolver } from '@/pages/draw/gen-code/parse/vue3/resolvers'
 
 interface Vue3ParseScheme {
   // 模板
@@ -31,7 +32,7 @@ export async function defaultVue3ParseScheme(scheme: DrawScheme): Promise<Record
     styles: '',
   }
   // 解析内容
-  const appendFiles = parseScheme(scheme, variables)
+  const appendFiles = await parseScheme(scheme, variables)
   // 定义主模版
   let mainTemplate = `<template>
     ${variables.templates}
@@ -61,13 +62,12 @@ export async function defaultVue3ParseScheme(scheme: DrawScheme): Promise<Record
 function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
   let appendFiles: Record<string, string> = {}
   // 解析器列表
-  const list: Array<BaseResolver> = []
+  const list: Array<BaseResolver> = getAllResolver()
   // 缓存解析器
   let cacheParse: Record<string, BaseResolver> = {}
   // 获取所有文件
-  let fileInfo = getProjectAllCode()
+  let projectFileInfo = getProjectAllCode()
   list.forEach((item) => {
-    item.projectFileInfo = fileInfo
     if (cacheParse[item.type]) {
       console.warn(`${item.type}解析器已存在`)
     }
@@ -75,63 +75,60 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
   })
   if (cacheParse['page']) {
     // 先解析页面
-    cacheParse['page'].parseStart(scheme.page, variables, appendFiles)
+    cacheParse['page'].parseStart({ variables, current: scheme.page, appendFiles, projectFileInfo })
 
     // 再递归解析子页面，解析完毕后即生成最终的文件。
     function parseChildren(children: Array<ComponentItem>) {
       children.forEach((item) => {
         if (cacheParse[item.name]) {
-          cacheParse[item.name].parseStart(item, variables, appendFiles)
+          cacheParse[item.name].parseStart({
+            variables,
+            current: item,
+            appendFiles,
+            projectFileInfo,
+          })
         } else {
           ElMessage.error(`${item.name}解析器不存在`)
+          throw Error(`${item.name}解析器不存在`)
         }
         if (item.children && item.children.length > 0) {
           parseChildren(item.children)
         }
-        cacheParse[item.name].parseStop(item, variables, appendFiles)
+        if (cacheParse[item.name] && cacheParse[item.name].parseStop) {
+          cacheParse[item.name].parseStop!({
+            variables,
+            current: item,
+            appendFiles,
+            projectFileInfo,
+          })
+        }
       })
     }
 
     if (scheme.page.children) {
-      parseChildren(scheme.page.children)
+      try {
+        parseChildren(scheme.page.children)
+      } catch (e) {
+        return Promise.reject(e)
+      }
     }
-    cacheParse['page'].parseStop(scheme.page, variables, appendFiles)
+    if (cacheParse['page'].parseStop) {
+      cacheParse['page'].parseStop({
+        variables,
+        current: scheme.page,
+        appendFiles,
+        projectFileInfo,
+      })
+    }
   } else {
     ElMessage.error('页面解析器不存在')
+    return Promise.reject(`页面解析器不存在`)
   }
   // 解析完成，打印所有信息
   console.log(scheme)
   console.log(variables)
   console.log(appendFiles)
-  return appendFiles
+  return Promise.resolve(appendFiles)
 }
 
-// 解析器方法
-interface BaseResolver {
-  // 解析器类型 其中，page为页面解析器
-  type: 'page' | string
-  /**
-   * 具体解析开始的方法
-   * @param current 当前解析项
-   * @param variables 最终生成模版的变量信息
-   * @param appendFiles 需要追加的文件信息
-   */
-  parseStart: (
-    current: PageConfig | ComponentItem,
-    variables: Vue3ParseScheme,
-    appendFiles: Record<string, string>,
-  ) => void
-  /**
-   * 具体解析结束的方法
-   * @param current 当前解析项
-   * @param variables 最终生成模版的变量信息
-   * @param appendFiles 需要追加的文件信息
-   */
-  parseStop: (
-    current: PageConfig | ComponentItem,
-    variables: Vue3ParseScheme,
-    appendFiles: Record<string, string>,
-  ) => void
-  // 项目所有文件引用信息
-  projectFileInfo: Record<string, string>
-}
+export type { Vue3ParseScheme }

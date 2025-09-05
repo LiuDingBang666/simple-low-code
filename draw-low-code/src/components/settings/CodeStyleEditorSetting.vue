@@ -42,16 +42,12 @@ function log(eventName: string, payload: Event) {
     let styles = parseCssToRecord(payload as unknown as string)
     // console.log(styles)
     let keys = Object.keys(styles)
-    // 区分id和class
-    let idStyle = keys.filter((key) => key.startsWith('#'))
+    // 只支持class样式
     let classStyle = keys.filter((key) => key.startsWith('.'))
     let mergerStyles: ComponentStyle = {
       idStyle: {},
       classStyle: {},
     }
-    idStyle.forEach((id) => {
-      mergerStyles.idStyle![id] = styles[id]
-    })
     classStyle.forEach((name) => {
       mergerStyles.classStyle![name] = styles[name]
     })

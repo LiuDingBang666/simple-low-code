@@ -100,10 +100,10 @@ interface ComponentStyle {
   classStyle?: {
     [key: string]: Record<string, Partial<CSSStyleDeclaration>>
   }
+  // id
+  id?: string
   // id对应的样式
-  idStyle?: {
-    [key: string]: Record<string, Partial<CSSStyleDeclaration>>
-  }
+  idStyle?: Partial<CSSStyleDeclaration>
 }
 
 export type { DrawScheme, ComponentStyle, ComponentItem, ComponentGroup, PageConfig }

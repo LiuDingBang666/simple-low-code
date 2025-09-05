@@ -28,12 +28,10 @@ export function parseStyles(component: ComponentStyle) {
     })
   }
   if (component.idStyle) {
-    Object.keys(component.idStyle).map((key) => {
-      afterStyle = {
-        ...afterStyle,
-        ...component.idStyle![key],
-      }
-    })
+    afterStyle = {
+      ...afterStyle,
+      ...component.idStyle,
+    }
   }
   afterStyle = {
     ...afterStyle,
