@@ -45,8 +45,6 @@ interface SettingPlugin {
   props?: Record<string, any>
   // 是否初始化
   isInit?: boolean
-  // 设计器绑定的当前组件实例id-暂无使用场景
-  componentInstanceId?: string
 }
 
 export type { SettingPluginGroup, SettingPlugin }

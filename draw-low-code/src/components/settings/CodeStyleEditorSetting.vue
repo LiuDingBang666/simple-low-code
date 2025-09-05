@@ -8,7 +8,6 @@
   <codemirror
     v-model="value"
     placeholder="请输入css样式..."
-    :style="{ height: '75vh' }"
     :autofocus="false"
     :indent-with-tab="true"
     :tab-size="2"
@@ -26,7 +25,7 @@ import type { SettingPlugin } from '@/types/draw/setting.ts'
 import * as csstree from 'css-tree'
 import type { ComponentStyle } from '@/types/draw/scheme.ts'
 
-const value = defineModel('value', { default: '.example {\nbackground: red;\n}' })
+const value = defineModel('value', { default: '.main {\nbackground: red;\n}' })
 
 const extensions = [css()]
 // Codemirror EditorView instance ref

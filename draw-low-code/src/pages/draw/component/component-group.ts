@@ -28,8 +28,6 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
             margin: '10px',
           },
           isNative: true,
-          groups: getInheritSettingGroup(),
-          settings: getInheritSettings(),
         },
         {
           name: 'p',
@@ -89,6 +87,9 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
           modules[`/src/components/components/${item.componentPath}`] as any,
         )
       }
+      // 注入所有基础设计器
+      item.groups = getInheritSettingGroup()
+      item.settings = getInheritSettings()
     })
   })
   return result

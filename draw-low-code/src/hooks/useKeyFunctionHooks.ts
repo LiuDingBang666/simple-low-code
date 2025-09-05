@@ -8,7 +8,7 @@ import UseSchemeStore from '@/store/useSchemeStore.ts'
  * @author: liudingbang
  * @date: 2025/9/5 09:09
  */
-export function useKeyHooks(callback?: (ev: KeyboardEvent) => void) {
+export function useKeyFunctionHooks(callback?: (ev: KeyboardEvent) => void) {
   let { getActiveComponent, clearActiveComponent } = useActiveComponentStore()
   let { deleteComponentById } = UseSchemeStore()
   let isFocus = false

@@ -90,10 +90,6 @@ export const useSchemeStore = defineStore(
       if (!item.id) {
         isAdd = true
         item.id = 'uuid-' + uuidv4()
-        // 给所有设计器注入当前实例组件id
-        item.settings?.forEach((setting) => {
-          setting.componentInstanceId = item.id
-        })
       }
       let closestNodeId = closestNode.getAttribute('data-id')
       let activeComponents: Array<ComponentItem> = []

@@ -37,9 +37,10 @@ import useSchemeStore from '@/store/useSchemeStore.ts'
 import { developing } from '@/utils/tip.ts'
 import { useRouter } from 'vue-router'
 import DrawSetting from '@/pages/draw/setting/DrawSetting.vue'
-import { onUnmounted } from 'vue'
+import { onMounted, onUnmounted } from 'vue'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
-import { useKeyHooks } from '@/hooks/useKeyHooks.ts'
+import { useKeyFunctionHooks } from '@/hooks/useKeyFunctionHooks.ts'
+import { ElNotification } from 'element-plus'
 
 const title = import.meta.env.VITE_APP_TITLE
 
@@ -52,7 +53,9 @@ function reset() {
 }
 
 const router = useRouter()
-useKeyHooks()
+// 注入键盘事件监听功能
+useKeyFunctionHooks()
+
 function preview() {
   window.open(router.resolve('/preview').href, '_blank')
 }
@@ -63,6 +66,12 @@ function resetActive() {
 
 onUnmounted(() => {
   resetActive()
+})
+
+onMounted(() => {
+  ElNotification.success(
+    '欢迎使用低代码平台,如遇到问题，请点击重置后再试试,如果还是不行，请加作者Wechat或提交bug～',
+  )
 })
 </script>
 
@@ -83,6 +92,7 @@ onUnmounted(() => {
   border: 0.5px solid rgba(128, 128, 128, 0.3);
   height: 90vh;
   overflow-x: hidden;
+
   .components {
     overflow-x: hidden;
     border-right: 0.5px solid rgba(128, 128, 128, 0.3);
@@ -90,6 +100,7 @@ onUnmounted(() => {
     height: 100%;
     width: 100%;
   }
+
   .main {
     height: 100%;
     width: 100%;
