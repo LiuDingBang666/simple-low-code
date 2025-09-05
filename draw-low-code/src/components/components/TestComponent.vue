@@ -15,7 +15,7 @@
       align-items: center;
     "
   >
-    我是测试组件，牛马牛马
+    我是测试组件
   </div>
 </template>
 

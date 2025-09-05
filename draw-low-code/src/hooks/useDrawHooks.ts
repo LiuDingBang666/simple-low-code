@@ -17,6 +17,7 @@ import type { ComponentItem } from '@/types/draw/scheme.ts'
  */
 // 存放当前正在拖拽的元素
 let dropHoverDomStack: Array<HTMLElement> = []
+
 const useDrawHooks = (
   dom: Ref<HTMLElement> | Reactive<HTMLElement> | HTMLElement,
   componentItem: ComponentItem,
@@ -25,6 +26,9 @@ const useDrawHooks = (
     extraEventCallBack: Record<string, any>
   },
 ) => {
+  let beforeNode: HTMLElement | null = null
+  let beforePosition: DragPosition | null = null
+
   /**
    * 额外的事件处理
    * @param name 事件名称
@@ -85,6 +89,15 @@ const useDrawHooks = (
             item.classList.remove('drop-hover')
           }
         })
+        // 获取位置
+        let position = getDragPosition(e, targetDom)
+        if (beforeNode === targetDom && beforePosition === position) {
+          return
+        }
+        targetDom.classList.add('drop-hover-position-' + position)
+        beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
+        beforeNode = targetDom
+        beforePosition = position
       } else {
         targetDom?.classList.remove('drop-hover')
         dropHoverDomStack = dropHoverDomStack.filter((item) => item !== targetDom)
@@ -266,7 +279,7 @@ const useDrawHooks = (
       targetDom.classList.remove('drop-hover')
       const scheme = useSchemeStore()
       let allComponentDoms = [...document.querySelectorAll('#render-component')]
-      let closestNode = getClosestNode(e, allComponentDoms)!
+      let closestNode = getClosestNode(e, allComponentDoms)! as HTMLElement
       let closestNodePosition: DragPosition = 'center'
       console.log('最近的节点')
       console.log(closestNode)
@@ -285,6 +298,10 @@ const useDrawHooks = (
     }
     targetDom = null
     activeDom = null
+
+    beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
+    beforeNode = null
+    beforePosition = null
     handlerExtraEvent('dragend', e)
   }
 

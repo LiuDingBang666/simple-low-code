@@ -134,6 +134,19 @@ onMounted(() => {
   border: 1px solid dodgerblue !important;
 }
 
+:global(.drop-hover-position-left) {
+  border-left: 5px dashed lawngreen !important;
+}
+:global(.drop-hover-position-right) {
+  border-right: 5px dashed lawngreen !important;
+}
+:global(.drop-hover-position-top) {
+  border-top: 5px dashed lawngreen !important;
+}
+:global(.drop-hover-position-bottom) {
+  border-bottom: 5px dashed lawngreen !important;
+}
+
 :global(#render-component) {
   cursor: grab;
 }

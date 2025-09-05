@@ -182,6 +182,7 @@ export const useSchemeStore = defineStore(
       // 有data-id的元素才是合法的承载对象
       const id = targetDom.getAttribute('data-id')
       if (id == null) {
+        console.error('当前元素没有data-id属性')
         return
       }
       // 是否放在顶层
