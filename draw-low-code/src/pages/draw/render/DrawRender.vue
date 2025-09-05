@@ -5,7 +5,7 @@
 -->
 
 <template>
-  <component
+  <Component
     v-for="item in props.components"
     :key="item.id"
     :data-can-drop="item.isCanNest"
@@ -23,7 +23,7 @@
       {{ item.title }}
     </template>
     <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />
-  </component>
+  </Component>
 </template>
 
 <script setup lang="ts">
