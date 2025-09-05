@@ -9,7 +9,7 @@ import { createZip } from '@/utils/zip.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
 import useSchemeStore from '@/store/useSchemeStore.ts'
-import { defaultVue3ParseScheme } from '@/pages/draw/gen-code/parse/vue3-parse.ts'
+import { defaultVue3ParseScheme } from '@/pages/draw/gen-code/parse/vue3/vue3-parse.ts'
 
 let { getScheme } = useSchemeStore()
 
@@ -22,9 +22,9 @@ let { getScheme } = useSchemeStore()
 // @ts-ignore
 export async function genCode(
   scheme: DrawScheme = getScheme().value,
-  parseScheme: (scheme: DrawScheme) => Record<string, string> = defaultVue3ParseScheme,
+  parseScheme: (scheme: DrawScheme) => Promise<Record<string, string>> = defaultVue3ParseScheme,
   zipName: string = uuidv4() + '.zip',
 ) {
-  await createZip(parseScheme(scheme), zipName)
+  await createZip(await parseScheme(scheme), zipName)
   ElMessage.success('生成成功')
 }

@@ -11,7 +11,7 @@
         >{{ title }}
         <el-button style="margin-left: 10px" type="danger" @click.stop="reset">重置</el-button>
         <el-button style="margin-left: 10px" type="warning" @click.stop="preview">预览</el-button>
-        <el-button style="margin-left: 10px" type="success" @click.stop="genCode">出码 </el-button>
+        <el-button style="margin-left: 10px" type="success" @click.stop="genCode">出码</el-button>
       </el-col>
     </el-row>
     <el-row class="content">
