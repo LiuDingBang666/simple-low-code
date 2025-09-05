@@ -66,6 +66,7 @@ const useDrawHooks = (
       let attribute = target.getAttribute('data-can-drop')
       // 判断当前这个目标节点是不是支持嵌套并且是可以嵌套的节点
       let dataId = target.getAttribute('data-id')
+      // 是否可以嵌套
       if (dataId && dataId !== 'top-node') {
         // 找到这个id对应的对接
         const scheme = useSchemeStore()
@@ -89,19 +90,41 @@ const useDrawHooks = (
             item.classList.remove('drop-hover')
           }
         })
-        // 获取位置
-        let position = getDragPosition(e, targetDom)
-        if (beforeNode === targetDom && beforePosition === position) {
-          return
-        }
-        targetDom.classList.add('drop-hover-position-' + position)
-        beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
-        beforeNode = targetDom
-        beforePosition = position
       } else {
         targetDom?.classList.remove('drop-hover')
         dropHoverDomStack = dropHoverDomStack.filter((item) => item !== targetDom)
         targetDom = null
+      }
+
+      // 获取位置提示
+      if (dataId) {
+        // 如果节点下面有很多子节点，则已最近的节点为准
+        let allComponentDoms = [...document.querySelectorAll('#render-component')]
+        let closestNode = getClosestNode(e, allComponentDoms)! as HTMLElement
+        let positionNode: HTMLElement | null = null
+        let position = getDragPosition(e, target)
+        let { getPage, findComponentItemById } = useSchemeStore()
+        if (dataId === 'top-node') {
+          if (getPage().children!.length > 0) {
+            positionNode = closestNode
+          } else {
+            positionNode = target
+          }
+        } else {
+          let node = findComponentItemById(dataId!)
+          if (node && node.children && node.children.length > 0) {
+            positionNode = closestNode
+          } else {
+            positionNode = target
+          }
+        }
+        if (beforeNode === positionNode && beforePosition === position) {
+          return
+        }
+        positionNode.classList.add('drop-hover-position-' + position)
+        beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
+        beforeNode = positionNode
+        beforePosition = position
       }
     }
     handlerExtraEvent('drag', e)
@@ -281,11 +304,11 @@ const useDrawHooks = (
       let allComponentDoms = [...document.querySelectorAll('#render-component')]
       let closestNode = getClosestNode(e, allComponentDoms)! as HTMLElement
       let closestNodePosition: DragPosition = 'center'
-      console.log('最近的节点')
-      console.log(closestNode)
+      // console.log('最近的节点')
+      // console.log(closestNode)
       if (closestNode) {
         closestNodePosition = getDragPosition(e, closestNode)
-        console.log('最近的节点位置', closestNodePosition)
+        // console.log('最近的节点位置', closestNodePosition)
       }
       await scheme.updateComponent({
         e,
