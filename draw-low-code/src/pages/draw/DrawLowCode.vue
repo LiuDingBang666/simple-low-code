@@ -132,6 +132,14 @@ onMounted(() => {
   border: 1px solid dodgerblue !important;
 }
 
+:global(#render-component) {
+  cursor: grab;
+}
+
+:global(.active-component) {
+  border: 1px solid red !important;
+}
+
 :global(.drop-hover-position-left) {
   border-left: 5px dashed lawngreen !important;
 }
@@ -146,13 +154,5 @@ onMounted(() => {
 
 :global(.drop-hover-position-bottom) {
   border-bottom: 5px dashed lawngreen !important;
-}
-
-:global(#render-component) {
-  cursor: grab;
-}
-
-:global(.active-component) {
-  border: 1px solid red !important;
 }
 </style>
