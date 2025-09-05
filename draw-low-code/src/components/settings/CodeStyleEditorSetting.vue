@@ -57,9 +57,7 @@ function log(eventName: string, payload: Event) {
       mergerStyles.classStyle![name] = styles[name]
     })
     // console.log(mergerStyles)
-    if (setting.updateComponent) {
-      setting.updateComponent({ ...mergerStyles, value } as any)
-    }
+    setting.updateComponent({ ...mergerStyles, value } as any)
     // console.log(setting)
   }
 }
@@ -116,12 +114,10 @@ function parseCssToRecord(css: string): CssRecord {
 
 let setting: SettingPlugin = useAttrs() as unknown as SettingPlugin
 onMounted(() => {
-  if (setting.getCurrentComponent) {
-    let component = setting.getCurrentComponent()
-    console.log(component)
-    if (component && component.value) {
-      value.value = component.value
-    }
+  let component = setting.getCurrentComponent()
+  console.log(component)
+  if (component && component.value) {
+    value.value = component.value
   }
 })
 </script>

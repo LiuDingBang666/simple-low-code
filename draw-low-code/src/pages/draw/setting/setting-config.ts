@@ -87,5 +87,5 @@ export const getInheritSettings = (): Array<SettingPlugin> => {
       sort: 1,
       componentPath: 'CodeStyleEditorSetting.vue',
     },
-  ]
+  ] as any
 }

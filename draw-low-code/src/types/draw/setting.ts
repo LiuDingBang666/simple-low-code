@@ -38,9 +38,9 @@ interface SettingPlugin {
   // 设计器组件实例
   is?: Component
   // 设计器修改数据回调(页面也作为一种特殊的组件存在)
-  updateComponent?: (item: ComponentItem | PageConfig) => void
+  updateComponent: (item: ComponentItem | PageConfig) => void
   // 设计器获取当前组件实例(页面也作为一种特殊的组件存在)
-  getCurrentComponent?: () => ComponentItem | PageConfig | undefined
+  getCurrentComponent: () => ComponentItem | PageConfig | undefined
   // 设计器单独的属性配置信息，每个设计器都可以支持自定义配置
   props?: Record<string, any>
   // 是否初始化
