@@ -5,7 +5,7 @@
  * @date: 2025/9/1 15:26
  */
 import { defineStore } from 'pinia'
-import { computed, nextTick, ref, watch } from 'vue'
+import { computed, defineAsyncComponent, nextTick, ref, watch } from 'vue'
 import type { ComponentItem, DrawScheme, PageConfig } from '@/types/draw/scheme.ts'
 import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
@@ -264,10 +264,9 @@ export const useSchemeStore = defineStore(
     }
 
     /**
-     * 通过id查找组件项
-     * @param id 组件项id
+     * 获取所有组件列表
      */
-    function findComponentItemById(id: string) {
+    function getAllComponentList() {
       // 树转list
       const list: Array<ComponentItem> = []
 
@@ -282,6 +281,15 @@ export const useSchemeStore = defineStore(
 
       // @ts-ignore
       treeToList(scheme.value.page.children!)
+      return list
+    }
+
+    /**
+     * 通过id查找组件项
+     * @param id 组件项id
+     */
+    function findComponentItemById(id: string) {
+      const list = getAllComponentList()
       return list.find((item) => item.id === id)
     }
 
@@ -313,6 +321,20 @@ export const useSchemeStore = defineStore(
       return scheme.value.page
     }
 
+    /**
+     * 渲染所有异步组件
+     */
+    function renderAllAsyncComponent() {
+      const modules = import.meta.glob('@/components/components/*.vue')
+      getAllComponentList().forEach((item) => {
+        if (item.componentPath) {
+          item.is = defineAsyncComponent(
+            modules[`/src/components/components/${item.componentPath}`] as any,
+          )
+        }
+      })
+    }
+
     // expose
     return {
       scheme,
@@ -325,6 +347,8 @@ export const useSchemeStore = defineStore(
       updateComponentById,
       updatePage,
       getPage,
+      getAllComponentList,
+      renderAllAsyncComponent,
     }
   },
   {

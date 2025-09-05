@@ -31,6 +31,8 @@ import type { ComponentItem } from '@/types/draw/scheme.ts'
 import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
 import { parseStyles } from '@/pages/draw/render/parse-styles.ts'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
+import useSchemeStore from '@/store/useSchemeStore.ts'
+import { onMounted } from 'vue'
 
 let props = withDefaults(
   defineProps<{
@@ -41,6 +43,11 @@ let props = withDefaults(
     components: () => [],
   },
 )
+
+let { renderAllAsyncComponent } = useSchemeStore()
+onMounted(() => {
+  renderAllAsyncComponent()
+})
 
 function handlerClick(e: Event, item: ComponentItem) {
   let store = useActiveComponentStore()
