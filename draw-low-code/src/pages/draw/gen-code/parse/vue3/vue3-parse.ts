@@ -88,8 +88,8 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
             projectFileInfo,
           })
         } else {
-          ElMessage.error(`${item.name}解析器不存在`)
-          throw Error(`${item.name}解析器不存在`)
+          ElMessage.error(`${item.name}解析器不存在,出码失败！`)
+          throw Error(`${item.name}解析器不存在,出码失败！`)
         }
         if (item.children && item.children.length > 0) {
           parseChildren(item.children)
@@ -121,8 +121,8 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
       })
     }
   } else {
-    ElMessage.error('页面解析器不存在')
-    return Promise.reject(`页面解析器不存在`)
+    ElMessage.error('页面解析器不存在,出码失败！')
+    return Promise.reject(`页面解析器不存在,出码失败！`)
   }
   // 解析完成，打印所有信息
   console.log(scheme)

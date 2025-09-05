@@ -8,6 +8,7 @@ import { saveAs } from 'file-saver'
  * @param zipName - zip 文件名
  */
 export async function createZip(files: Record<string, string>, zipName = 'archive.zip') {
+  console.log(files)
   const zip = new JSZip()
 
   // 添加文件

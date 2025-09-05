@@ -92,6 +92,9 @@ const useDrawHooks = (
         })
       } else {
         targetDom?.classList.remove('drop-hover')
+        if (beforePosition) {
+          beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
+        }
         dropHoverDomStack = dropHoverDomStack.filter((item) => item !== targetDom)
         targetDom = null
       }
@@ -104,14 +107,14 @@ const useDrawHooks = (
         let positionNode: HTMLElement | null = null
         let { getPage, findComponentItemById } = useSchemeStore()
         if (dataId === 'top-node') {
-          if (getPage().children!.length > 0) {
+          if (getPage().children!.length > 1) {
             positionNode = closestNode
           } else {
             positionNode = target
           }
         } else {
           let node = findComponentItemById(dataId!)
-          if (node && node.children && node.children.length > 0) {
+          if (node && node.children && node.children.length > 1) {
             positionNode = closestNode
           } else {
             positionNode = target
