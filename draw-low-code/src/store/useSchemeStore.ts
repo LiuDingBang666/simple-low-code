@@ -17,6 +17,9 @@ const defaultScheme: DrawScheme = {
   version: '1.0.0',
   page: {
     isPage: true,
+    defaultStyle: {
+      height: '100%',
+    },
     style: {},
     children: [],
   },
@@ -57,6 +60,9 @@ export const useSchemeStore = defineStore(
         version: '1.0.0',
         page: {
           isPage: true,
+          defaultStyle: {
+            height: '100%',
+          },
           style: {},
           children: [],
           settings: getInheritSettings(),

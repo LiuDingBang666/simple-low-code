@@ -73,12 +73,19 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
     }
     cacheParse[item.type] = item
   })
+  let level = 1
   if (cacheParse['page']) {
     // 先解析页面
-    cacheParse['page'].parseStart({ variables, current: scheme.page, appendFiles, projectFileInfo })
+    cacheParse['page'].parseStart({
+      variables,
+      current: scheme.page,
+      appendFiles,
+      projectFileInfo,
+      level,
+    })
 
     // 再递归解析子页面，解析完毕后即生成最终的文件。
-    function parseChildren(children: Array<ComponentItem>) {
+    function parseChildren(children: Array<ComponentItem>, level: number) {
       children.forEach((item) => {
         if (cacheParse[item.name]) {
           cacheParse[item.name].parseStart({
@@ -86,13 +93,14 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
             current: item,
             appendFiles,
             projectFileInfo,
+            level: ++level,
           })
         } else {
           ElMessage.error(`${item.name}解析器不存在,出码失败！`)
           throw Error(`${item.name}解析器不存在,出码失败！`)
         }
         if (item.children && item.children.length > 0) {
-          parseChildren(item.children)
+          parseChildren(item.children, level)
         }
         if (cacheParse[item.name] && cacheParse[item.name].parseStop) {
           cacheParse[item.name].parseStop!({
@@ -100,6 +108,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
             current: item,
             appendFiles,
             projectFileInfo,
+            level,
           })
         }
       })
@@ -107,7 +116,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
 
     if (scheme.page.children) {
       try {
-        parseChildren(scheme.page.children)
+        parseChildren(scheme.page.children, level)
       } catch (e) {
         return Promise.reject(e)
       }
@@ -118,6 +127,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
         current: scheme.page,
         appendFiles,
         projectFileInfo,
+        level,
       })
     }
   } else {

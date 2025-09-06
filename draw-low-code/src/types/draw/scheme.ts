@@ -101,7 +101,7 @@ interface ComponentStyle {
     [key: string]: Record<string, Partial<CSSStyleDeclaration>>
   }
   // id
-  id?: string
+  idName?: string
   // id对应的样式
   idStyle?: Partial<CSSStyleDeclaration>
 }

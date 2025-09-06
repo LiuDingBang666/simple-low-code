@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver'
  */
 export async function createZip(files: Record<string, string>, zipName = 'archive.zip') {
   console.log(files)
+  return
   const zip = new JSZip()
 
   // 添加文件
