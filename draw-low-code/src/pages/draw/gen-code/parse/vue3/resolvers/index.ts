@@ -23,31 +23,11 @@ interface ResolverData {
   level: number
 }
 
-// 解析器方法
-interface BaseResolver {
-  // 解析器类型 其中，page为页面解析器
-  type: 'page' | string
-  /**
-   * 具体解析开始的方法
-   * @param current 当前解析项
-   * @param variables 最终生成模版的变量信息
-   * @param appendFiles 需要追加的文件信息
-   */
-  parseStart: (data: ResolverData) => void
-  /**
-   * 具体解析结束的方法
-   * @param current 当前解析项
-   * @param variables 最终生成模版的变量信息
-   * @param appendFiles 需要追加的文件信息
-   */
-  parseStop?: (data: ResolverData) => void
-}
-
 /**
  * 获取所有解析器
  */
 export function getAllResolver(): Array<BaseResolver> {
-  return [pageResolver, divResolver]
+  return [new PageResolver(), new DivResolver()]
 }
 
 function camelToKebab(str: string) {
@@ -135,7 +115,7 @@ function commonParseStart(
     baseParseData.push(props)
   }
 
-  return baseParseData.length > 0 ? ' ' + baseParseData.join(' ') : ''
+  variables.templates += baseParseData.length > 0 ? ' ' + baseParseData.join(' ') : ''
 }
 
 // @ts-ignore
@@ -148,35 +128,58 @@ function commonParseStop(
   variables.templates += `\n${'  '.repeat(level)}`
 }
 
+// 基础解析器，公共功能
+class BaseResolver {
+  // 解析器类型 其中，page为页面解析器
+  public type: string | 'page' = ''
+
+  /**
+   * 具体解析开始的方法
+   * @param data 解析数据
+   */
+  public parseStart(data: ResolverData) {
+    commonParseStart(data.current, data.variables, data.level)
+  }
+
+  /**
+   * 具体解析结束的方法
+   * @param data 解析数据
+   */
+  public parseStop(data: ResolverData) {
+    commonParseStop(data.current, data.variables, data.level)
+  }
+}
+
 // todo 组件基础解析功能
 
 // 页面解析器
-const pageResolver: BaseResolver = {
-  type: 'page',
-  // @ts-ignore
-  parseStart: ({ variables, current, appendFiles, projectFileInfo, level }: ResolverData) => {
-    let commonInfo = commonParseStart(current, variables, level)
-    variables.templates += `<div${commonInfo}>`
-  },
-  // @ts-ignore
-  parseStop: ({ variables, current, appendFiles, projectFileInfo, level }: ResolverData) => {
-    commonParseStop(current, variables, level)
-    variables.templates += `</div>`
-  },
+class PageResolver extends BaseResolver {
+  type = 'page'
+
+  public parseStart(data: ResolverData) {
+    data.variables.templates += `<div`
+    super.parseStart(data)
+    data.variables.templates += `>`
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+    data.variables.templates += `</div>`
+  }
 }
 
 // div解析器
-const divResolver: BaseResolver = {
-  type: 'div',
-  // @ts-ignore
-  parseStart: ({ variables, current, appendFiles, projectFileInfo, level }: ResolverData) => {
-    let commonInfo = commonParseStart(current, variables, level)
-    variables.templates += `<div${commonInfo}>`
-  },
-  // @ts-ignore
-  parseStop: ({ variables, current, appendFiles, projectFileInfo, level }: ResolverData) => {
-    commonParseStop(current, variables, level)
-    variables.templates += `</div>`
-  },
+class DivResolver extends PageResolver {
+  type = 'div'
+
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
 }
-export type { BaseResolver, CurrentParse, ResolverData }
+
+export type { CurrentParse, ResolverData }
+export { BaseResolver, PageResolver }

@@ -102,15 +102,13 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
         if (item.children && item.children.length > 0) {
           parseChildren(item.children, level)
         }
-        if (cacheParse[item.name] && cacheParse[item.name].parseStop) {
-          cacheParse[item.name].parseStop!({
-            variables,
-            current: item,
-            appendFiles,
-            projectFileInfo,
-            level,
-          })
-        }
+        cacheParse[item.name].parseStop!({
+          variables,
+          current: item,
+          appendFiles,
+          projectFileInfo,
+          level,
+        })
       })
     }
 
@@ -121,15 +119,13 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
         return Promise.reject(e)
       }
     }
-    if (cacheParse['page'].parseStop) {
-      cacheParse['page'].parseStop({
-        variables,
-        current: scheme.page,
-        appendFiles,
-        projectFileInfo,
-        level,
-      })
-    }
+    cacheParse['page'].parseStop({
+      variables,
+      current: scheme.page,
+      appendFiles,
+      projectFileInfo,
+      level,
+    })
   } else {
     ElMessage.error('页面解析器不存在,出码失败！')
     return Promise.reject(`页面解析器不存在,出码失败！`)
