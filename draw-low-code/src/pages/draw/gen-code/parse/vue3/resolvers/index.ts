@@ -24,12 +24,9 @@ interface ResolverData {
 }
 
 /**
- * 获取所有解析器
+ * 驼峰转横线
+ * @param str 驼峰字符串
  */
-export function getAllResolver(): Array<BaseResolver> {
-  return [new PageResolver(), new DivResolver()]
-}
-
 function camelToKebab(str: string) {
   return str.replace(/[A-Z]/g, (m) => '-' + m.toLowerCase())
 }
@@ -39,18 +36,16 @@ function camelToKebab(str: string) {
  * @param current 当前解析项
  * @param variables 模版变量
  * @param level 层级
+ * @param tag 标签
  */
 function commonParseStart(
   current: ComponentItem | PageConfig,
   variables: Vue3ParseScheme,
   level: number,
+  tag: string,
 ) {
-  if (level != 0) {
-    variables.templates += '\n'
-  }
-  variables.templates += `${'  '.repeat(level)}`
   let baseParseData: Array<string> = []
-  // 1、行内
+  // 行内
   let mergerLineStyle: Record<string, any> = { ...current?.defaultStyle, ...current?.style }
   let style = ''
   if (Object.keys(mergerLineStyle).length > 0) {
@@ -62,7 +57,7 @@ function commonParseStart(
     baseParseData.push(style)
   }
 
-  // 2、id
+  // id
   let id = ``
   if (current.idName) {
     id = `id="${current.idName}"`
@@ -76,7 +71,7 @@ function commonParseStart(
     baseParseData.push(id)
   }
 
-  // 3、class
+  // class
   let classList = ``
   if (current.classStyle) {
     classList = `:class="[`
@@ -97,7 +92,7 @@ function commonParseStart(
     baseParseData.push(classList)
   }
 
-  // 4、attrs
+  // attrs
   let attrs = ''
   if (current.attrs) {
     for (let attrsKey in current.attrs) {
@@ -106,7 +101,7 @@ function commonParseStart(
     baseParseData.push(attrs)
   }
 
-  // 5、props
+  // props
   let props = ''
   if ('props' in current && current.props) {
     for (let propsKey in current.props) {
@@ -115,17 +110,78 @@ function commonParseStart(
     baseParseData.push(props)
   }
 
+  if (level != 0) {
+    variables.templates += '\n'
+  }
+
+  // 添加标签
+  variables.templates += `${'  '.repeat(level)}`
+  variables.templates += `<${tag}`
   variables.templates += baseParseData.length > 0 ? ' ' + baseParseData.join(' ') : ''
+  variables.templates += `>`
+
+  // 添加标题
+  titleInject(current, variables)
 }
 
+/**
+ * 基础解析结束方法
+ * @param current 当前组件
+ * @param variables 变量
+ * @param level 层级
+ * @param tag 标签
+ */
 // @ts-ignore
 function commonParseStop(
   // @ts-ignore
   current: ComponentItem | PageConfig,
   variables: Vue3ParseScheme,
   level: number,
+  tag: string,
 ) {
-  variables.templates += `\n${'  '.repeat(level)}`
+  if (current.children && current.children.length > 0) {
+    variables.templates += '\n'
+    variables.templates += `${'  '.repeat(level)}`
+  }
+  variables.templates += `</${tag}>`
+}
+
+/**
+ * 标题解析器
+ * @param current 当前组件
+ * @param variables 变量
+ */
+function titleInject(current: ComponentItem | PageConfig, variables: Vue3ParseScheme) {
+  if ('showTitle' in current && current.showTitle) {
+    variables.templates += `${current.title}`
+  }
+}
+
+/**
+ * 导入组件解析器
+ * @param variable 模版变量
+ * @param type 组件类型
+ * @param path 组件路径
+ */
+function importComponent(variable: Vue3ParseScheme, type: string, path: string) {
+  if (variable.imports.includes(type) && imports.includes(path)) {
+    return
+  }
+  variable.imports += `import {${type}} from '${path}'\n`
+}
+
+// 装饰器数组
+export const ResolverRegistry: Array<new () => BaseResolver> = []
+
+export function RegisterResolver(target: new () => BaseResolver) {
+  ResolverRegistry.push(target)
+}
+
+/**
+ * 获取所有解析器
+ */
+export function getAllResolver(): Array<BaseResolver> {
+  return ResolverRegistry.map((R) => new R())
 }
 
 // 基础解析器，公共功能
@@ -133,12 +189,15 @@ class BaseResolver {
   // 解析器类型 其中，page为页面解析器
   public type: string | 'page' = ''
 
+  // 解析标签
+  public tag: string = ''
+
   /**
    * 具体解析开始的方法
    * @param data 解析数据
    */
   public parseStart(data: ResolverData) {
-    commonParseStart(data.current, data.variables, data.level)
+    commonParseStart(data.current, data.variables, data.level, this.tag)
   }
 
   /**
@@ -146,34 +205,86 @@ class BaseResolver {
    * @param data 解析数据
    */
   public parseStop(data: ResolverData) {
-    commonParseStop(data.current, data.variables, data.level)
+    commonParseStop(data.current, data.variables, data.level, this.tag)
   }
 }
 
 // todo 组件基础解析功能
 
 // 页面解析器
+@RegisterResolver
 class PageResolver extends BaseResolver {
   type = 'page'
 
+  tag = 'div'
+
   public parseStart(data: ResolverData) {
-    data.variables.templates += `<div`
     super.parseStart(data)
-    data.variables.templates += `>`
   }
 
   public parseStop(data: ResolverData) {
     super.parseStop(data)
-    data.variables.templates += `</div>`
   }
 }
 
 // div解析器
-class DivResolver extends PageResolver {
+@RegisterResolver
+class DivResolver extends BaseResolver {
   type = 'div'
+
+  tag = 'div'
 
   public parseStart(data: ResolverData) {
     super.parseStart(data)
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
+}
+
+// p段落解析器
+@RegisterResolver
+class PResolver extends BaseResolver {
+  type = 'p'
+
+  tag = 'p'
+
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
+}
+
+// span
+@RegisterResolver
+class SpanResolver extends BaseResolver {
+  type = 'span'
+
+  tag = 'span'
+
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
+}
+
+@RegisterResolver
+class ElButtonResolver extends BaseResolver {
+  type = 'ElButton'
+
+  tag = 'el-button'
+
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+    // 导入element组件
+    importComponent(data.variables, this.type, 'element-plus')
   }
 
   public parseStop(data: ResolverData) {
@@ -182,4 +293,4 @@ class DivResolver extends PageResolver {
 }
 
 export type { CurrentParse, ResolverData }
-export { BaseResolver, PageResolver }
+export { BaseResolver, PResolver, DivResolver, PageResolver, SpanResolver }

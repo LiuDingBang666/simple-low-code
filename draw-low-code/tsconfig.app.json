@@ -13,6 +13,10 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
+    // 开启装饰器支持
+    "experimentalDecorators": true,
+    // 更复杂的反射（比如依赖注入）
+    "emitDecoratorMetadata": true,
     // 支持@
     "baseUrl": ".",
     "paths": {

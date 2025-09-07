@@ -11,6 +11,14 @@ export default defineConfig({
       '@': path.resolve(__dirname, 'src'),
     },
   },
+  esbuild: {
+    tsconfigRaw: {
+      compilerOptions: {
+        // 启用装饰器
+        experimentalDecorators: true,
+      },
+    },
+  },
   css: {
     preprocessorOptions: {
       scss: {

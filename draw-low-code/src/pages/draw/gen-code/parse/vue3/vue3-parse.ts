@@ -73,7 +73,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
     }
     cacheParse[item.type] = item
   })
-  let level = 1
+
   if (cacheParse['page']) {
     // 先解析页面
     cacheParse['page'].parseStart({
@@ -81,11 +81,13 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
       current: scheme.page,
       appendFiles,
       projectFileInfo,
-      level,
+      level: 0,
     })
 
+    let level = 1
     // 再递归解析子页面，解析完毕后即生成最终的文件。
     function parseChildren(children: Array<ComponentItem>, level: number) {
+      let tempLevel = level
       children.forEach((item) => {
         if (cacheParse[item.name]) {
           cacheParse[item.name].parseStart({
@@ -93,14 +95,14 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
             current: item,
             appendFiles,
             projectFileInfo,
-            level: ++level,
+            level: tempLevel,
           })
         } else {
           ElMessage.error(`${item.name}解析器不存在,出码失败！`)
           throw Error(`${item.name}解析器不存在,出码失败！`)
         }
         if (item.children && item.children.length > 0) {
-          parseChildren(item.children, level)
+          parseChildren(item.children, level++)
         }
         cacheParse[item.name].parseStop!({
           variables,
@@ -114,7 +116,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
 
     if (scheme.page.children) {
       try {
-        parseChildren(scheme.page.children, level)
+        parseChildren(scheme.page.children, ++level)
       } catch (e) {
         return Promise.reject(e)
       }
@@ -124,7 +126,7 @@ function parseScheme(scheme: DrawScheme, variables: Vue3ParseScheme) {
       current: scheme.page,
       appendFiles,
       projectFileInfo,
-      level,
+      level: 0,
     })
   } else {
     ElMessage.error('页面解析器不存在,出码失败！')
