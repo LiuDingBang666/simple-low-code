@@ -179,8 +179,8 @@ function importComponent(
   if (isImportCustomFile) {
     let filePath = '/' + path.replace('@', 'src')
     if (data.projectFileInfo[filePath]) {
-      data.appendFiles[filePath.substring(filePath.indexOf('src/') + 4)] =
-        data.projectFileInfo[filePath]
+      let fileName = filePath.substring(filePath.indexOf('src/') + 4)
+      data.appendFiles[fileName] = data.projectFileInfo[filePath]
     }
   }
 }
