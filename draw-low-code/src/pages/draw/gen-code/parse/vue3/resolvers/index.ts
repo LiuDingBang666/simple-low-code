@@ -159,15 +159,30 @@ function titleInject(current: ComponentItem | PageConfig, variables: Vue3ParseSc
 
 /**
  * 导入组件解析器
- * @param variable 模版变量
+ * @param data 解析数据
  * @param type 组件类型
  * @param path 组件路径
+ * @param isImportCustomFile 是否需要导入自定义文件
  */
-function importComponent(variable: Vue3ParseScheme, type: string, path: string) {
-  if (variable.imports.includes(type) && imports.includes(path)) {
+function importComponent(
+  data: ResolverData,
+  type: string,
+  path: string,
+  isImportCustomFile = false,
+) {
+  if (data.variables.imports.includes(type) && data.variables.imports.includes(path)) {
     return
   }
-  variable.imports += `import {${type}} from '${path}'\n`
+  data.variables.imports += isImportCustomFile
+    ? `import ${type} from '${path}'\n`
+    : `import {${type}} from '${path}'\n`
+  if (isImportCustomFile) {
+    let filePath = '/' + path.replace('@', 'src')
+    if (data.projectFileInfo[filePath]) {
+      data.appendFiles[filePath.substring(filePath.indexOf('src/') + 4)] =
+        data.projectFileInfo[filePath]
+    }
+  }
 }
 
 // 装饰器数组
@@ -284,7 +299,24 @@ class ElButtonResolver extends BaseResolver {
   public parseStart(data: ResolverData) {
     super.parseStart(data)
     // 导入element组件
-    importComponent(data.variables, this.type, 'element-plus')
+    importComponent(data, this.type, 'element-plus')
+  }
+
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
+}
+
+@RegisterResolver
+class TestComponentResolver extends BaseResolver {
+  type = 'TestComponent'
+
+  tag = 'TestComponent'
+
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+    // 导入自定义组件
+    importComponent(data, this.type, '@/components/components/TestComponent.vue', true)
   }
 
   public parseStop(data: ResolverData) {
@@ -293,4 +325,12 @@ class ElButtonResolver extends BaseResolver {
 }
 
 export type { CurrentParse, ResolverData }
-export { BaseResolver, PResolver, DivResolver, PageResolver, SpanResolver }
+export {
+  BaseResolver,
+  PResolver,
+  DivResolver,
+  PageResolver,
+  SpanResolver,
+  ElButtonResolver,
+  TestComponentResolver,
+}
