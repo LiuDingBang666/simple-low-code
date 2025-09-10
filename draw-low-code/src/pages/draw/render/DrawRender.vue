@@ -22,7 +22,11 @@
     <template v-if="item.showTitle && item.title">
       {{ item.title }}
     </template>
-    <DrawRender v-if="item.children && item.children.length > 0" :components="item.children" />
+    <DrawRender
+      v-if="item.children && item.children.length > 0"
+      :components="item.children"
+      :data-can-drop="dataCanDrop"
+    />
   </Component>
 </template>
 
@@ -38,6 +42,7 @@ let props = withDefaults(
   defineProps<{
     // 组件列表
     components: Array<ComponentItem>
+    // 是否可以拖拽
     dataCanDrop: boolean
   }>(),
   {
