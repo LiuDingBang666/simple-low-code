@@ -8,7 +8,7 @@
   <Component
     v-for="item in props.components"
     :key="item.id"
-    :data-can-drop="item.isCanNest"
+    :data-can-drop="item.isCanNest && dataCanDrop"
     :data-id="item.id"
     draggable="true"
     :is="item.is ?? item.name"
@@ -38,9 +38,11 @@ let props = withDefaults(
   defineProps<{
     // 组件列表
     components: Array<ComponentItem>
+    dataCanDrop: boolean
   }>(),
   {
     components: () => [],
+    dataCanDrop: true,
   },
 )
 
