@@ -16,14 +16,11 @@
         v-bind="group"
         :key="groupIdx"
       >
-        <template
-          v-for="(setting, settingIdx) in group.settings"
-          :key="groupIdx + '-' + settingIdx"
-        >
+        <div v-for="(setting, settingIdx) in group.settings" :key="groupIdx + '-' + settingIdx">
           <el-tag>{{ setting.name }}</el-tag>
           <el-tag v-if="setting.tip" type="danger">{{ setting?.tip }}</el-tag>
           <Component :is="setting.is" v-bind="setting" />
-        </template>
+        </div>
       </el-collapse-item>
     </el-collapse>
     <div v-if="isNoSetting" class="select-tip">请先配置设置器...</div>
@@ -41,6 +38,7 @@ const activeNames = ref<Array<string>>([])
 
 let { getActiveComponent } = useActiveComponentStore()
 
+let isFirstOpen = ref<boolean>(true)
 /**
  * 获取所有设计器组级设计器信息
  * @param currentComponent 当前活跃组件
@@ -49,7 +47,12 @@ function getAllSettingGroupByComponentItem(
   currentComponent: ActiveComponent,
 ): Array<SettingPluginGroup> {
   let settings: Array<SettingPlugin> = initAllSetting(currentComponent?.settings ?? [])
-  return mergeSettingPluginGroup(currentComponent?.groups ?? [], settings)
+  const result = mergeSettingPluginGroup(currentComponent?.groups ?? [], settings)
+  if (result.length > 0 && isFirstOpen.value) {
+    activeNames.value = [result[0].name]
+    isFirstOpen.value = false
+  }
+  return result
 }
 
 const isNoSetting = computed(() => {
