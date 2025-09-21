@@ -4,93 +4,19 @@
  * @author: liudingbang
  * @date: 2025/9/2 10:19
  */
-import type { ComponentGroup } from '@/types/draw/scheme'
-import { defineAsyncComponent } from 'vue'
-import { getInheritSettingGroup, getInheritSettings } from '@/pages/draw/setting/setting-config.ts'
+import type { ComponentGroup, ComponentItem } from '@/types/draw/scheme'
+import { buildComponentGroups } from '@/pages/draw/component/component-registry'
 
+/**
+ * 兼容旧接口：允许外部再追加一组组件（转成 category=custom）
+ */
 export default function initGroup(extraComponent: ComponentGroup[] = []): Array<ComponentGroup> {
-  let group: Array<ComponentGroup> = [
-    {
-      sort: 1,
-      name: '基础组件',
-      items: [
-        {
-          name: 'div',
-          title: '盒子',
-          isCanNest: true,
-          canNestElements: ['div'],
-          defaultStyle: {
-            minWidth: '100px',
-            minHeight: '100px',
-            padding: '10px',
-            border: '1px solid black',
-            display: 'inline-block',
-            margin: '10px',
-          },
-          isNative: true,
-        },
-        {
-          name: 'p',
-          title: '段落',
-          isNative: true,
-          showTitle: true,
-        },
-        {
-          name: 'span',
-          title: '文本',
-          defaultStyle: {
-            display: 'block',
-            lineHeight: '20px',
-          },
-          isNative: true,
-          showTitle: true,
-        },
-      ],
-    },
-    {
-      sort: 2,
-      name: '开源UI库组件',
-      items: [
-        {
-          name: 'ElButton',
-          title: '按钮',
-          isNative: false,
-          showTitle: true,
-          props: {
-            type: 'primary',
-          },
-        },
-      ],
-    },
-    {
-      sort: 2,
-      name: '自定义组件',
-      items: [
-        {
-          name: 'TestComponent',
-          componentPath: 'TestComponent.vue',
-          title: '自定义',
-          isNative: false,
-        },
-      ],
-    },
-  ]
-  let result = [...group, ...extraComponent].sort((a, b) => a.sort - b.sort)
-  // 所有自定义或者扩展组件放置的地方
-  const modules = import.meta.glob('@/components/components/*.vue')
-  result.forEach((item) => {
-    item.items.forEach(async (item) => {
-      // 异步组件加载
-      if (item.componentPath) {
-        // 加载异步组件
-        item.is = defineAsyncComponent(
-          modules[`/src/components/components/${item.componentPath}`] as any,
-        )
-      }
-      // 注入所有基础设计器
-      item.groups = getInheritSettingGroup()
-      item.settings = getInheritSettings()
-    })
-  })
-  return result
+  // 将外部传入的额外组件扁平化为 ComponentItem 列表
+  const extraItems: ComponentItem[] = extraComponent.flatMap((g) => g.items).map((it) => ({
+    ...it,
+    // 追加分类标记
+    // @ts-ignore 自定义透传
+    category: 'custom',
+  })) as any
+  return buildComponentGroups(extraItems)
 }
