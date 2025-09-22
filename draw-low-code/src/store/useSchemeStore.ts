@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from 'uuid'
 import { ElMessage } from 'element-plus'
 import type { DragPosition } from '@/hooks/useDrawHooks.ts'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
+import useHistoryStore from '@/store/useHistoryStore.ts'
 import { getInheritSettingGroup, getInheritSettings } from '@/pages/draw/setting/setting-config.ts'
 
 const defaultScheme: DrawScheme = {
@@ -136,7 +137,8 @@ export const useSchemeStore = defineStore(
           activeComponentStore.setActiveComponent({ target: dom } as unknown as Event, item)
         }
       }
-    }
+  const historyStore = useHistoryStore()
+  historyStore.push(scheme.value)
 
     /**
      * 通过，删除组件树中的某一项
@@ -159,7 +161,9 @@ export const useSchemeStore = defineStore(
 
       // @ts-ignore
       deleteComponentById(children)
-    }
+  const historyStore = useHistoryStore()
+  historyStore.push(scheme.value)
+  }
 
     /**
      * 判断当前承载节点是否是待放置组件的节点
@@ -305,9 +309,23 @@ export const useSchemeStore = defineStore(
      * @param newComponentItem 新的组件项
      */
     function updateComponentById(id: string, newComponentItem: ComponentItem) {
-      let componentItem = findComponentItemById(id)
-      if (componentItem) {
-        Object.assign(componentItem, newComponentItem)
+      // 找到父级数组
+      function findParentAndIndex(children: ComponentItem[]): { parent: ComponentItem[]; index: number } | null {
+        for (let i = 0; i < children.length; i++) {
+          if (children[i].id === id) {
+            return { parent: children, index: i }
+          }
+          if (children[i].children) {
+            const res = findParentAndIndex(children[i].children!)
+            if (res) return res
+          }
+        }
+        return null
+      }
+      const res = findParentAndIndex(scheme.value.page.children!)
+      if (res) {
+        // 用新对象替换，确保响应式
+        res.parent.splice(res.index, 1, { ...newComponentItem })
       }
     }
 
