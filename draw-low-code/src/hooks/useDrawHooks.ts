@@ -65,6 +65,7 @@ const useDrawHooks = (
     e.stopPropagation()
     // console.log('拖拽中', e)
     const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
+    const scheme = useSchemeStore()
     if (target) {
       let attribute = target.getAttribute('data-can-drop')
       // 判断当前这个目标节点是不是支持嵌套并且是可以嵌套的节点
@@ -72,19 +73,27 @@ const useDrawHooks = (
       // 是否可以嵌套
       if (dataId && dataId !== 'top-node') {
         // 找到这个id对应的对接
-        const scheme = useSchemeStore()
         let item = scheme.findComponentItemById(dataId)
-        if (
-          item &&
-          !item?.isCanNestAll &&
-          (!item.isCanNest ||
-            !item.canNestElements ||
-            !item.canNestElements.includes(componentItem.name))
-        ) {
+        // debugger
+        if (!item) {
+          return
+        }
+        if (item.isCanNest !== undefined && !item.isCanNest) {
           return
         }
       }
       if (attribute && attribute === 'true' && target !== activeDom) {
+        let attribute = target.getAttribute('data-id')
+        if (attribute && attribute !== 'top-node') {
+          const targetItem = scheme.findComponentItemById(attribute)
+          if (targetItem && dataId) {
+            let item = scheme.findComponentItemById(dataId)
+            if (item && item.canNestElements && !item.canNestElements.includes(targetItem.name)) {
+              return
+            }
+          }
+        }
+        // 判断是否可放置在这个节点下面
         targetDom = target
         targetDom.classList.add('drop-hover')
         // 将其他的全部失活
@@ -129,7 +138,6 @@ const useDrawHooks = (
           return
         }
         beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
-        console.log(positionNode)
         positionNode.classList.add('drop-hover-position-' + position)
         beforeNode = positionNode
         beforePosition = position
@@ -295,7 +303,7 @@ const useDrawHooks = (
       }
     })
     if (closest == null) {
-      console.error('没有找到最接近的元素')
+      // console.error('没有找到最接近的元素')
     }
     return closest
   }
@@ -304,7 +312,6 @@ const useDrawHooks = (
    * 拖拽结束（无论是否成功 drop）
    */
   async function dragend(e: DragEvent) {
-    console.log('拖拽结束-dragend', e)
     e.stopPropagation()
     // todo 动态生成协议，页面上根据协议来渲染对应的组件，点击组件后，找到当前协议对应的组件，通过修改配置来更新组件的信息。最后通过协议来生成页面代码
     if (targetDom && activeDom) {

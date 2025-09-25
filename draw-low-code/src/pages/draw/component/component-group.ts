@@ -19,7 +19,7 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
           title: '盒子',
           isCanNest: true,
           canNestElements: ['div'],
-          defaultStyle: {
+          style: {
             width: '100%',
             height: '100px',
             display: 'inline-block',
@@ -29,12 +29,18 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
         {
           name: 'p',
           title: '段落',
+          canNestElements: ['div'],
+          style: {
+            lineHeight: 'normal',
+            margin: '0px',
+          },
           isNative: true,
           showTitle: true,
         },
         {
           name: 'span',
           title: '文本',
+          canNestElements: ['div'],
           defaultStyle: {
             display: 'block',
             lineHeight: '20px',

@@ -5,29 +5,70 @@
 -->
 
 <template>
-  <Component
+  <div
+    class="wrap-render-component"
+    v-if="dataCanDrop"
     v-for="item in props.components"
     :key="item.id"
-    :data-can-drop="item.isCanNest && dataCanDrop"
-    :data-id="item.id"
-    draggable="true"
-    :is="item.is ?? item.name"
-    :style="parseStyles(item)"
-    :ref="(e: any) => refInitDrawHooks(e, item)"
-    v-bind="{ ...item.attrs, ...item.props }"
-    id="render-component"
-    :class="[item.id]"
-    @click.stop="(e: Event) => handlerClick(e, item)"
   >
-    <template v-if="item.showTitle && item.title">
-      {{ item.title }}
-    </template>
-    <DrawRender
-      v-if="item.children && item.children.length > 0"
-      :components="item.children"
-      :data-can-drop="dataCanDrop"
-    />
-  </Component>
+    <Component
+      :data-can-drop="
+        (item.isCanNest ||
+          item.isCanNestAll ||
+          (item.canNestElements && item.canNestElements?.length > 0)) &&
+        dataCanDrop
+      "
+      :data-id="item.id"
+      draggable="true"
+      :is="item.is ?? item.name"
+      :style="parseStyles(item)"
+      :ref="(e: any) => refInitDrawHooks(e, item)"
+      v-bind="{ ...item.attrs, ...item.props }"
+      id="render-component"
+      :class="[item.id]"
+      @click.stop="(e: Event) => handlerClick(e, item)"
+    >
+      <template v-if="item.showTitle && item.title">
+        {{ item.title }}
+      </template>
+      <DrawRender
+        v-if="item.children && item.children.length > 0"
+        :components="item.children"
+        :data-can-drop="dataCanDrop"
+      />
+    </Component>
+    <div class="tip-content">{{ item.title }}</div>
+  </div>
+  <template v-else>
+    <Component
+      v-for="item in props.components"
+      :key="item.id"
+      :data-can-drop="
+        (item.isCanNest ||
+          item.isCanNestAll ||
+          (item.canNestElements && item.canNestElements?.length > 0)) &&
+        dataCanDrop
+      "
+      :data-id="item.id"
+      draggable="true"
+      :is="item.is ?? item.name"
+      :style="parseStyles(item)"
+      :ref="(e: any) => refInitDrawHooks(e, item)"
+      v-bind="{ ...item.attrs, ...item.props }"
+      id="render-component"
+      :class="[item.id]"
+      @click.stop="(e: Event) => handlerClick(e, item)"
+    >
+      <template v-if="item.showTitle && item.title">
+        {{ item.title }}
+      </template>
+      <DrawRender
+        v-if="item.children && item.children.length > 0"
+        :components="item.children"
+        :data-can-drop="dataCanDrop"
+      />
+    </Component>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -69,4 +110,21 @@ export default {
 }
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.wrap-render-component {
+  position: relative;
+  padding: 5px;
+  margin: 5px;
+  box-sizing: border-box;
+  border-radius: 2px;
+  border: 1px solid dodgerblue;
+
+  .tip-content {
+    position: absolute;
+    right: 10px;
+    bottom: 20px;
+    color: dodgerblue;
+    font-weight: bold;
+  }
+}
+</style>
