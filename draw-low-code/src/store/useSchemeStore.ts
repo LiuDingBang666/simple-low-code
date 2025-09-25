@@ -219,20 +219,14 @@ export const useSchemeStore = defineStore(
      * @param data e:事件 targetDom:承载的元素 activeDom:当前 componentItem:组件项
      */
     async function updateComponent(data: {
-      e: DragEvent
+      e?: DragEvent
       targetDom: HTMLElement
-      activeDom: HTMLElement
+      activeDom?: HTMLElement
       componentItem: ComponentItem
       closestNode: Element
       closestNodePosition: DragPosition
     }) {
-      let { e, targetDom, activeDom, componentItem, closestNode, closestNodePosition } = data
-      console.log('当前事件', e)
-      console.log('承载元素', targetDom)
-      console.log('当前脱拽元素', activeDom)
-      console.log('当前组件', componentItem)
-      console.log('当前临近节点', closestNode)
-      console.log('当前位置', closestNodePosition)
+      let { targetDom, componentItem, closestNode, closestNodePosition } = data
 
       // 判断是否可以更新
       if (!isCanUpdate(targetDom, componentItem)) {
