@@ -1,0 +1,154 @@
+/*
+ * 全局主题 Token（Light + Dark）
+ * 只包含 CSS 变量，不直接写具体组件样式，方便后续主题切换与动态覆盖。
+ */
+
+:root {
+    /* 色彩体系 */
+    --color-primary: #3a7afe;
+    --color-primary-hover: #2368f5;
+    --color-primary-active: #0f56ec;
+
+    --color-bg-page: #f5f7fb;
+    --color-bg-surface: #ffffff;
+    --color-bg-subtle: #f0f2f5;
+    --color-bg-soft: #eef5ff;
+
+    --color-border: #e5e7eb;
+    --color-border-strong: #d0d3d9;
+
+    --color-text: #1f2329;
+    --color-text-secondary: #646a73;
+    --color-text-tertiary: #8a919f;
+    --color-text-disabled: #9aa1b2;
+    --color-focus: var(--color-primary);
+
+    /* 语义色 */
+    --color-success: #16a34a;
+    --color-warning: #f59e0b;
+    --color-danger: #dc2626;
+
+    /* 圆角 */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --radius-xl: 20px;
+
+    /* 阴影 */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.06);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.12);
+    --shadow-focus: 0 0 0 3px rgba(58, 122, 254, 0.35);
+    /* 画布背景 */
+    --canvas-grid-color: #e5e9ef;
+    --canvas-grid-subtle: #f7f9fb;
+    --canvas-grid-dot: rgba(31, 35, 41, 0.08);
+
+    /* 动画/过渡 */
+    --transition-fast: 120ms ease;
+    --transition-base: 200ms ease;
+
+    /* 间距（8pt 系列） */
+    --gap-4: 4px;
+    --gap-8: 8px;
+    --gap-12: 12px;
+    --gap-16: 16px;
+    --gap-20: 20px;
+    --gap-24: 24px;
+    --gap-32: 32px;
+
+    /* 字体 */
+    --font-size-xs: 12px;
+    --font-size-sm: 13px;
+    --font-size-base: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 22px;
+    --line-height-base: 1.5;
+}
+
+/* 暗色模式变量覆盖（预留） */
+body.dark {
+    --color-bg-page: #1f242b;
+    --color-bg-surface: #2a3038;
+    --color-bg-subtle: #343b44;
+    --color-bg-soft: #2f3b4b;
+    --color-border: #414a55;
+    --color-border-strong: #525e6b;
+    --color-text: #e5e9ef;
+    --color-text-secondary: #c2c8d0;
+    --color-text-tertiary: #a3adb9;
+    --color-text-disabled: #6b737c;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.6);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.55);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.5);
+    --shadow-focus: 0 0 0 3px rgba(58, 122, 254, 0.55);
+}
+
+/* 通用工具类（适度，避免污染） */
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.text-tertiary {
+    color: var(--color-text-tertiary);
+}
+
+.muted {
+    color: var(--color-text-disabled);
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-y {
+    overflow-y: auto;
+}
+
+.scroll-x {
+    overflow-x: auto;
+}
+
+.full-height {
+    height: 100%;
+}
+
+/* 工具：按钮组通用 */
+.btn-group-inline {
+    display: inline-flex;
+    gap: 8px;
+}
+
+/* 可复用面板标题 */
+.panel-title {
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    letter-spacing: .5px;
+    padding: 0 var(--gap-12);
+    height: 40px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--color-border);
+    background: linear-gradient(180deg, var(--color-bg-surface) 0%, var(--color-bg-subtle) 100%);
+}
+
+/* 轻量滚动条（按需加类） */
+.thin-scroll::-webkit-scrollbar {
+    width: 6px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, .18);
+    border-radius: 3px;
+}
+
+.thin-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, .32);
+}

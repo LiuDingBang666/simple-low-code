@@ -262,13 +262,18 @@ class DivResolver extends BaseResolver {
 @RegisterResolver
 class PResolver extends BaseResolver {
   type = 'p'
-
   tag = 'p'
-
   public parseStart(data: ResolverData) {
     super.parseStart(data)
+    const comp = data.current as ComponentItem
+    if (comp.value) {
+      data.variables.templates += comp.value
+    } else if (comp.props && comp.props.title) {
+      data.variables.templates += comp.props.title
+    } else if (comp.title) {
+      data.variables.templates += comp.title
+    }
   }
-
   public parseStop(data: ResolverData) {
     super.parseStop(data)
   }
@@ -278,13 +283,43 @@ class PResolver extends BaseResolver {
 @RegisterResolver
 class SpanResolver extends BaseResolver {
   type = 'span'
-
   tag = 'span'
-
   public parseStart(data: ResolverData) {
     super.parseStart(data)
+    const comp = data.current as ComponentItem
+    if (comp.value) {
+      data.variables.templates += comp.value
+    } else if (comp.props && comp.props.title) {
+      data.variables.templates += comp.props.title
+    } else if (comp.title) {
+      data.variables.templates += comp.title
+    }
   }
-
+  public parseStop(data: ResolverData) {
+    super.parseStop(data)
+  }
+}
+// input解析器
+@RegisterResolver
+class InputResolver extends BaseResolver {
+  type = 'input'
+  tag = 'input'
+  public parseStart(data: ResolverData) {
+    super.parseStart(data)
+    const comp = data.current as ComponentItem
+    // input的value属性
+    if (comp.value) {
+      data.variables.templates += ` :value=\"'${comp.value}'\"`
+    } else if (comp.props && comp.props.value) {
+      data.variables.templates += ` :value=\"'${comp.props.value}'\"`
+    }
+    // 占位符
+    if (comp.attrs && comp.attrs.placeholder) {
+      data.variables.templates += ` placeholder=\"${comp.attrs.placeholder}\"`
+    } else if (comp.props && comp.props.placeholder) {
+      data.variables.templates += ` placeholder=\"${comp.props.placeholder}\"`
+    }
+  }
   public parseStop(data: ResolverData) {
     super.parseStop(data)
   }
