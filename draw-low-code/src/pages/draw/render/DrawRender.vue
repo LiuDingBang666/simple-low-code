@@ -37,7 +37,12 @@
         :data-can-drop="dataCanDrop"
       />
     </Component>
-    <div class="tip-content">{{ item.title }}</div>
+    <div
+      class="tip-content"
+      v-if="activeComponent && activeComponent.id && activeComponent.id === item.id"
+    >
+      {{ item.title }}
+    </div>
   </div>
   <template v-else>
     <Component
@@ -77,7 +82,7 @@ import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
 import { parseStyles } from '@/pages/draw/render/parse-styles.ts'
 import useActiveComponentStore from '@/store/useActiveComponentStore.ts'
 import useSchemeStore from '@/store/useSchemeStore.ts'
-import { onMounted } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 let props = withDefaults(
   defineProps<{
@@ -96,10 +101,18 @@ let { renderAllAsyncComponent } = useSchemeStore()
 onMounted(() => {
   renderAllAsyncComponent()
 })
+let { setActiveComponent, getActiveComponent } = useActiveComponentStore()
 
+let activeComponent = ref(getActiveComponent().value)
+watch(
+  () => getActiveComponent().value,
+  (newValue) => {
+    activeComponent.value = newValue
+  },
+)
 function handlerClick(e: Event, item: ComponentItem) {
-  let store = useActiveComponentStore()
-  store.setActiveComponent({ target: (e.target as HTMLElement).parentElement } as Event, item)
+  setActiveComponent({ target: (e.target as HTMLElement).parentElement } as Event, item)
+  activeComponent.value = item
 }
 </script>
 
@@ -113,16 +126,16 @@ export default {
 <style scoped lang="scss">
 .wrap-render-component {
   position: relative;
-  padding: 15px;
-  margin: 5px;
+  //padding: 15px;
   box-sizing: border-box;
   border-radius: 2px;
-  border: 1px solid dodgerblue;
+  border: 1px dashed dodgerblue;
 
   .tip-content {
     position: absolute;
     right: 10px;
     bottom: 10px;
+    font-size: 12px;
     color: dodgerblue;
     font-weight: bold;
   }

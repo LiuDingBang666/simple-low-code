@@ -143,22 +143,22 @@ onMounted(() => {
 }
 
 :global(.active-component) {
-  border: 1px solid red !important;
+  border: 1px solid dodgerblue !important;
 }
 
 :global(.drop-hover-position-left) {
-  border-left: 5px dashed lawngreen !important;
+  border-left: 5px dashed dodgerblue !important;
 }
 
 :global(.drop-hover-position-right) {
-  border-right: 5px dashed lawngreen !important;
+  border-right: 5px dashed dodgerblue !important;
 }
 
 :global(.drop-hover-position-top) {
-  border-top: 5px dashed lawngreen !important;
+  border-top: 5px dashed dodgerblue !important;
 }
 
 :global(.drop-hover-position-bottom) {
-  border-bottom: 5px dashed lawngreen !important;
+  border-bottom: 5px dashed dodgerblue !important;
 }
 </style>
