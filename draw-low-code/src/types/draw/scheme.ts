@@ -58,6 +58,8 @@ interface ComponentItem extends ComponentStyle {
   isCanNest?: boolean
   // 可以嵌套的名称
   canNestElements?: Array<string>
+  // 是否可以全部嵌套
+  isCanNestAll?: boolean
 
   // 组件设计器
   settings?: Array<SettingPlugin>

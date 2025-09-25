@@ -28,7 +28,7 @@ const useDrawHooks = (
 ) => {
   let beforeNode: HTMLElement | null = null
   let beforePosition: DragPosition | null = null
-
+  let isOver = false
   /**
    * 额外的事件处理
    * @param name 事件名称
@@ -59,6 +59,9 @@ const useDrawHooks = (
    * 拖拽中（高频触发，不推荐做逻辑）
    */
   const drag = throttle(function (e: DragEvent) {
+    if (isOver) {
+      return
+    }
     e.stopPropagation()
     // console.log('拖拽中', e)
     const target = document.elementFromPoint(e.clientX, e.clientY) as HTMLElement
@@ -73,6 +76,7 @@ const useDrawHooks = (
         let item = scheme.findComponentItemById(dataId)
         if (
           item &&
+          !item?.isCanNestAll &&
           (!item.isCanNest ||
             !item.canNestElements ||
             !item.canNestElements.includes(componentItem.name))
@@ -124,8 +128,9 @@ const useDrawHooks = (
         if (beforeNode === positionNode && beforePosition === position) {
           return
         }
-        positionNode.classList.add('drop-hover-position-' + position)
         beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
+        console.log(positionNode)
+        positionNode.classList.add('drop-hover-position-' + position)
         beforeNode = positionNode
         beforePosition = position
       }
@@ -193,6 +198,7 @@ const useDrawHooks = (
    * 开始拖拽
    */
   function dragstart(e: DragEvent) {
+    isOver = false
     // console.log('开始拖拽', e)
     e.stopPropagation()
     activeDom = e.target as HTMLElement
@@ -298,7 +304,7 @@ const useDrawHooks = (
    * 拖拽结束（无论是否成功 drop）
    */
   async function dragend(e: DragEvent) {
-    // console.log('拖拽结束-dragend', e)
+    console.log('拖拽结束-dragend', e)
     e.stopPropagation()
     // todo 动态生成协议，页面上根据协议来渲染对应的组件，点击组件后，找到当前协议对应的组件，通过修改配置来更新组件的信息。最后通过协议来生成页面代码
     if (targetDom && activeDom) {
@@ -324,10 +330,10 @@ const useDrawHooks = (
     }
     targetDom = null
     activeDom = null
-
     beforeNode?.classList.remove('drop-hover-position-' + beforePosition)
     beforeNode = null
     beforePosition = null
+    isOver = true
     handlerExtraEvent('dragend', e)
   }
 

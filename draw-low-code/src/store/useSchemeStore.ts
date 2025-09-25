@@ -109,8 +109,8 @@ export const useSchemeStore = defineStore(
       }
       // 找到对应的位置
       let index = activeComponents.findIndex((item) => item.id === closestNodeId)
-      console.log('最近的位置:')
-      console.log(index)
+      // console.log('最近的位置:')
+      // console.log(index)
       switch (closestNodePosition) {
         case 'top':
         case 'left':

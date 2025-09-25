@@ -14,29 +14,22 @@
       :key="groupIndex"
     >
       <div class="component-list">
-        <template v-for="(componentItem, componentIndex) in groupItem.items" :key="componentIndex">
+        <div
+          class="component-list-item"
+          draggable="true"
+          id="drag-box"
+          v-for="(componentItem, componentIndex) in groupItem.items"
+          :ref="(e: any) => refInitDrawHooks(e, componentItem as any)"
+          :key="componentIndex"
+        >
           <el-image
             v-if="componentItem.icon"
-            draggable="true"
-            class="box"
             fit="cover"
             :src="componentItem.icon"
             :ref="(e: any) => refInitDrawHooks(e, componentItem)"
-            v-bind="{ ...componentItem.props, ...componentItem.attrs }"
           ></el-image>
-
-          <Component
-            v-else
-            draggable="true"
-            id="drag-box"
-            :class="componentItem.isNative ? 'box' : undefined"
-            :is="componentItem.is ?? componentItem.name"
-            :ref="(e: any) => refInitDrawHooks(e, componentItem)"
-            v-bind="{ ...componentItem.props, ...componentItem.attrs }"
-          >
-            {{ componentItem.title }}
-          </Component>
-        </template>
+          {{ componentItem.title }}
+        </div>
       </div>
     </el-collapse-item>
   </el-collapse>
@@ -59,23 +52,22 @@ onMounted(async () => {
 </script>
 
 <style scoped lang="scss">
-.box {
-  width: 50px;
-  height: 50px;
-  margin: 5px;
-  @include variables.flex-center();
-  border-radius: 5px;
-  background-color: dodgerblue;
-  color: white;
-  cursor: grab;
-  display: inline-block;
-  text-align: center;
-  line-height: 50px;
-}
-
 .component-list {
   display: flex;
   flex-wrap: wrap;
+  &-item {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    margin: 5px;
+    @include variables.flex-center();
+    border-radius: 5px;
+    background-color: dodgerblue;
+    color: white;
+    cursor: grab;
+    text-align: center;
+    line-height: 50px;
+  }
 }
 
 .title {
