@@ -11,7 +11,7 @@ import type { ComponentItem } from '@/types/draw/scheme.ts'
  */
 export function useKeyFunctionHooks(callback?: (ev: KeyboardEvent) => void) {
   let { clearActiveComponent } = useActiveComponentStore()
-  let { deleteComponentById, undo, getUndoStack, scheme, updateComponent } = UseSchemeStore()
+  let { deleteComponentById, undo, getUndoStack, scheme } = UseSchemeStore()
   // 输入框是否聚焦
   let isFocus = false
 

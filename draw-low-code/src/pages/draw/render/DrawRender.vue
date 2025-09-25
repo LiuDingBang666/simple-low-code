@@ -39,7 +39,7 @@
     </Component>
     <div
       class="tip-content"
-      v-if="activeComponent && activeComponent.id && activeComponent.id === item.id"
+      v-if="activeComponent && (activeComponent as ComponentItem).id && (activeComponent as ComponentItem).id === item.id"
     >
       {{ item.title }}
     </div>
