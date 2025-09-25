@@ -35,16 +35,10 @@ export const useSchemeStore = defineStore(
     const undoStack = ref<Array<DrawScheme>>([])
 
     // actions
-    watch(
-      scheme.value,
-      () => {
-        console.log('当前协议信息:')
-        console.log(scheme.value)
-      },
-      {
-        deep: true,
-      },
-    )
+    watch(scheme.value, () => {
+      console.log('当前协议信息:')
+      console.log(scheme.value)
+    })
 
     /**
      * 设置协议信息
@@ -365,7 +359,7 @@ export const useSchemeStore = defineStore(
           setScheme(undoScheme)
         }
       } else {
-        setScheme(JSON.parse(JSON.stringify(defaultScheme)))
+        scheme.value.page = { ...defaultScheme.page }
         scheme.value.page.children = []
         undoStack.value = []
       }
