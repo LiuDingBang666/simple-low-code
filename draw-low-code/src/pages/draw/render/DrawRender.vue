@@ -99,7 +99,7 @@ onMounted(() => {
 
 function handlerClick(e: Event, item: ComponentItem) {
   let store = useActiveComponentStore()
-  store.setActiveComponent(e, item)
+  store.setActiveComponent({ target: (e.target as HTMLElement).parentElement } as Event, item)
 }
 </script>
 
@@ -113,7 +113,7 @@ export default {
 <style scoped lang="scss">
 .wrap-render-component {
   position: relative;
-  padding: 5px;
+  padding: 15px;
   margin: 5px;
   box-sizing: border-box;
   border-radius: 2px;
@@ -122,7 +122,7 @@ export default {
   .tip-content {
     position: absolute;
     right: 10px;
-    bottom: 20px;
+    bottom: 10px;
     color: dodgerblue;
     font-weight: bold;
   }

@@ -44,6 +44,7 @@ import { refInitDrawHooks } from '@/hooks/useDrawHooks.ts'
 const activeName = ref('1')
 let group = reactive<Array<ComponentGroup>>([])
 onMounted(async () => {
+  // @ts-ignore
   group.splice(0, group.length, ...initGroup())
   if (group.length > 0) {
     activeName.value = group[0].name

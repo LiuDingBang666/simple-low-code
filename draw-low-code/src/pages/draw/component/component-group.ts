@@ -21,7 +21,7 @@ export default function initGroup(extraComponent: ComponentGroup[] = []): Array<
           canNestElements: ['div'],
           style: {
             width: '100%',
-            height: '100px',
+            minHeight: '100px',
             display: 'inline-block',
           },
           isNative: true,

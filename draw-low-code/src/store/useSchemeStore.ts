@@ -133,7 +133,10 @@ export const useSchemeStore = defineStore(
         if (dom) {
           let activeComponentStore = useActiveComponentStore()
           activeComponentStore.clearActiveComponent()
-          activeComponentStore.setActiveComponent({ target: dom } as unknown as Event, item)
+          activeComponentStore.setActiveComponent(
+            { target: dom.parentElement } as unknown as Event,
+            item,
+          )
         }
       }
     }
