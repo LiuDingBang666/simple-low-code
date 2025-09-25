@@ -31,11 +31,20 @@ export const useSchemeStore = defineStore(
     const scheme = ref<DrawScheme>(defaultScheme)
     scheme.value.page.settings = getInheritSettings()
     scheme.value.page.groups = getInheritSettingGroup()
+    // 内部维护一个还原回滚栈, 用于回滚
+    const undoStack = ref<Array<DrawScheme>>([])
+
     // actions
-    watch(scheme.value, () => {
-      console.log('当前协议信息:')
-      console.log(scheme.value)
-    })
+    watch(
+      scheme.value,
+      () => {
+        console.log('当前协议信息:')
+        console.log(scheme.value)
+      },
+      {
+        deep: true,
+      },
+    )
 
     /**
      * 设置协议信息
@@ -270,6 +279,10 @@ export const useSchemeStore = defineStore(
           )
         }
       }
+      console.log(scheme.value)
+      undoStack.value.push(JSON.parse(JSON.stringify(scheme.value)))
+      console.log('更新协议')
+      console.log(undoStack.value)
     }
 
     /**
@@ -344,11 +357,30 @@ export const useSchemeStore = defineStore(
       })
     }
 
+    function undo() {
+      if (undoStack.value.length > 1) {
+        undoStack.value.pop()
+        let undoScheme = undoStack.value[undoStack.value.length - 1]
+        if (undoScheme) {
+          setScheme(undoScheme)
+        }
+      } else {
+        setScheme(JSON.parse(JSON.stringify(defaultScheme)))
+        scheme.value.page.children = []
+        undoStack.value = []
+      }
+    }
+
+    function getUndoStack() {
+      return computed(() => {
+        return undoStack.value
+      })
+    }
+
     // expose
     return {
       scheme,
       getScheme,
-      setScheme,
       clearScheme,
       updateComponent,
       findComponentItemById,
@@ -358,13 +390,15 @@ export const useSchemeStore = defineStore(
       getPage,
       getAllComponentList,
       renderAllAsyncComponent,
+      undo,
+      getUndoStack,
     }
   },
   {
     persist: {
       key: 'scheme',
       storage: localStorage,
-      pick: ['scheme'],
+      pick: ['scheme', 'undoStack'],
     },
   },
 )

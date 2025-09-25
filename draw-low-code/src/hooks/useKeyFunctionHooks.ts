@@ -10,7 +10,7 @@ import UseSchemeStore from '@/store/useSchemeStore.ts'
  */
 export function useKeyFunctionHooks(callback?: (ev: KeyboardEvent) => void) {
   let { getActiveComponent, clearActiveComponent } = useActiveComponentStore()
-  let { deleteComponentById } = UseSchemeStore()
+  let { deleteComponentById, undo, getUndoStack, scheme } = UseSchemeStore()
   let isFocus = false
 
   function handlerKeyEvent() {
@@ -21,10 +21,15 @@ export function useKeyFunctionHooks(callback?: (ev: KeyboardEvent) => void) {
         if (current && 'id' in current && current.id) {
           deleteComponentById(current.id)
           clearActiveComponent()
+          getUndoStack().value.push(JSON.parse(JSON.stringify(scheme)))
         }
       }
       if (callback) {
         callback(ev)
+      }
+      // ctrl + z 撤销
+      if (ev.ctrlKey && ev.key === 'z') {
+        undo()
       }
     }
   }
